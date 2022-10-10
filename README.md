@@ -5,3 +5,4 @@ SPOTED est un projet d'API permettant aux utilisateurs de référencer des lieux
 - note attribuée
 
 à voir : possibilité de prendre une photo et de l'attribuer au lieu
+ une ekip de schok pour manger des wok
