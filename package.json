@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "nodemon",
     "start": "node ./bin/start"
   },
   "dependencies": {
@@ -12,5 +13,8 @@
     "http-errors": "^2.0.0",
     "morgan": "~1.10.0",
     "nodejs": "^0.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
   }
 }
