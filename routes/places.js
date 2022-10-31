@@ -1,4 +1,5 @@
 import express from "express";
+
 import Place from '../models/place.js';
 
 const router = express.Router();
@@ -9,11 +10,15 @@ router.get("/", function (req, res, next) {
 
   Place.find().then(function (doc) {
     res.render('index',{index:doc});
+
+
+
   })
 });
 
 router.post('/insert',function (req, res, next){
   let item = {
+
     name:req.body.name,
     canton:req.body.canton,
     location:req.body.location,
@@ -22,6 +27,9 @@ router.post('/insert',function (req, res, next){
     tags:req.body.tags,
   }
   let data = new Place(item);
+
+   
+
   data.save();
   res.redirect('/')
 })
@@ -29,6 +37,7 @@ router.post('/insert',function (req, res, next){
 
 router.post('/update',function (req, res, next){
   let item = {
+
     name:req.body.name,
     canton:req.body.canton,
     location:req.body.location,
@@ -47,15 +56,18 @@ router.post('/update',function (req, res, next){
     doc.pictures = req.body.pictures;
     doc.notes = req.body.notes;
     doc.tags = req.body.tags;
+
     doc.save();
   })
   res.redirect('/')
 })
 
 
+
 router.post('/post',function (req, res, next){
 let id = req.body.id;
 Place.findByIdAndRemove(id).exec();
+
 res.redirect('/')
 })
 
