@@ -1,35 +1,35 @@
 import express from "express";
+
+import Place from '../models/place.js';
+
 const router = express.Router();
-let mongoose = require('mongoose');
-mongoose.connect('localhost:3000/spotted');
-let Schema = mongoose.Schema;
-
-let userDataSchema = new Schema({
-  title: {type: String,required:true},
-  content: String,
-  author: String,
-},{collection:'user-data'})
-
-let UserData = mongoose.model('UserData',userDataSchema);
 
 router.get("/", function (req, res, next) {
-  res.send("Got a response from the places route");
+  res.send("Got a response from the Places route");
 
 
-
-  UserData.find().then(function (doc) {
+  Place.find().then(function (doc) {
     res.render('index',{index:doc});
+
+
 
   })
 });
 
 router.post('/insert',function (req, res, next){
   let item = {
-    title:req.body.title,
-    content:req.body.content,
-    author:req.body.author
+
+    name:req.body.name,
+    canton:req.body.canton,
+    location:req.body.location,
+    pictures:req.body.pictures,
+    notes:req.body.notes,
+    tags:req.body.tags,
   }
-  let data = new UserData(item);
+  let data = new Place(item);
+
+   
+
   data.save();
   res.redirect('/')
 })
@@ -37,26 +37,37 @@ router.post('/insert',function (req, res, next){
 
 router.post('/update',function (req, res, next){
   let item = {
-    title:req.body.title,
-    content:req.body.content,
-    author:req.body.author
+
+    name:req.body.name,
+    canton:req.body.canton,
+    location:req.body.location,
+    pictures:req.body.pictures,
+    notes:req.body.notes,
+    tags:req.body.tags,
   }
   let id = req.body.id;
-  UserData.findById(id).then(function (err,doc) {
+  Place.findById(id).then(function (err,doc) {
     if (err){
       console.error('Pas de truc trouvé')
     }
-    doc.title= req.body.title;
-    doc.content = req.body.content;
-    doc.author = req.body.author;
+    doc.name= req.body.name;
+    doc.canton = req.body.canton;
+    doc.location = req.body.location;
+    doc.pictures = req.body.pictures;
+    doc.notes = req.body.notes;
+    doc.tags = req.body.tags;
+
     doc.save();
   })
   res.redirect('/')
 })
 
+
+
 router.post('/post',function (req, res, next){
 let id = req.body.id;
-UserData.findByIdAndRemove(id).exec();
+Place.findByIdAndRemove(id).exec();
+
 res.redirect('/')
 })
 
