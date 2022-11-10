@@ -5,11 +5,11 @@ import places from './place.js';
 const Schema = mongoose.Schema;
 // Define the schema for notes
 const noteSchema = new Schema({
-    userId: {
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
       },
-      placeId: {
+      place: {
         type: Schema.Types.ObjectId,
         ref: 'Place'
       },
