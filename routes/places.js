@@ -16,7 +16,7 @@ router.get("/", function (req, res, next) {
   })
 });
 
-router.post('/insert',function (req, res, next){
+router.post('/post',function (req, res, next){
   let item = {
 
     name:req.body.name,
