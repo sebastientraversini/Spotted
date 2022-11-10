@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import pictures from './picture.js';
+import notes from './note.js';
 
 
 const Schema = mongoose.Schema;
@@ -30,7 +31,7 @@ const placeSchema = new Schema({
         }
       },
     pictures: [{ type: Schema.Types.ObjectId, ref: 'pictures' }],
-    notes : {type: Number, required: false},
+    notes : { type: Schema.Types.ObjectId, ref: 'notes' },
     tags : {type :String, required: true}
 
 },{collection:'user-places'});
