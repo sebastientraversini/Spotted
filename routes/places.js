@@ -6,32 +6,32 @@ const router = express.Router();
 
 router.get("/", function (req, res, next) {
   res.send("Got a response from the Places route");
-
-
-  Place.find().then(function (doc) {
+  /* Place.find().then(function (doc) {
     res.render('index',{index:doc});
 
-
-
-  })
+  }) */
 });
 
-router.post('/post',function (req, res, next){
+router.post('/',function (req, res, next){
   let item = {
 
     name:req.body.name,
     canton:req.body.canton,
     location:req.body.location,
     pictures:req.body.pictures,
-    notes:req.body.notes,
+    note:req.body.note,
     tags:req.body.tags,
   }
   let data = new Place(item);
 
-   
 
-  data.save();
-  res.redirect('/')
+  data.save(function(err, savedPlace) {
+    if (err) {
+      next(err);
+    }
+    res.send(savedPlace);
+  });
+ 
 })
 
 
@@ -42,7 +42,7 @@ router.post('/update',function (req, res, next){
     canton:req.body.canton,
     location:req.body.location,
     pictures:req.body.pictures,
-    notes:req.body.notes,
+    note:req.body.note,
     tags:req.body.tags,
   }
   let id = req.body.id;
@@ -54,7 +54,7 @@ router.post('/update',function (req, res, next){
     doc.canton = req.body.canton;
     doc.location = req.body.location;
     doc.pictures = req.body.pictures;
-    doc.notes = req.body.notes;
+    doc.note = req.body.note;
     doc.tags = req.body.tags;
 
     doc.save();
@@ -64,7 +64,7 @@ router.post('/update',function (req, res, next){
 
 
 
-router.post('/post',function (req, res, next){
+router.post('/delete',function (req, res, next){
 let id = req.body.id;
 Place.findByIdAndRemove(id).exec();
 
