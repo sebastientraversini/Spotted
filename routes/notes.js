@@ -1,9 +1,10 @@
 import express from "express";
 import Note from '../models/note.js';
+import { authenticate } from "./auth.js";
 
 const router = express.Router();
 
-router.get("/", function (req, res, next) {
+router.get("/",authenticate, function (req, res, next) {
   res.send("wallah ça fonctionne");
 });
 /* router.get("/hello", function (req, res, next) {
