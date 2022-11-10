@@ -5,6 +5,7 @@ import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import placesRouter from "./routes/places.js";
 import notesRouter from "./routes/notes.js";
+import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
 
 import mongoose from 'mongoose';
@@ -22,7 +23,7 @@ app.use("/users", usersRouter);
 app.use("/places", placesRouter);
 app.use("/notes", notesRouter);
 app.use("/login", authRouter);
-
+app.use("/pictures", picturesRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
