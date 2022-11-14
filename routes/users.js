@@ -117,19 +117,22 @@ router.get("/:id/places", getUserId, function (req, res, next) {
     })
 });
 
-router.patch("/:id", getUserId, function (req, res, next) {
-  
- const id = req.params.id;
-const {name,surname} = req.body;
-
-const user=User.find((user)=>user.id==id)
+router.patch("/:id", getUserId, async function (req, res, next) {
 
 
-if(name) user.name=name; 
-if(surname) user.surname=surname; 
+  const updated = await User.update(
+    {
+      _id: req.user.id,
+    },
+    {
+      name: req.body.name,
+      surname: req.body.surname
+    }
+  );
 
-res.send("user modifié");
+  console.log(updated);
 
+  res.send("user modifié");
 });
 
 

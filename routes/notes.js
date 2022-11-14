@@ -149,7 +149,24 @@ router.get("/",authenticate, function (req, res, next) {
       }
     });
   })
+  
+  router.patch("/:id", async function (req, res, next) {
 
+
+    const updated = await Note.update(
+      {
+        _id: req.note.id,
+      },
+      {
+        stars: req.body.stars,
+        text: req.body.text
+      }
+    );
+  
+    console.log(updated);
+  
+    res.send("note modifié");
+  });
 
 export default router;
 

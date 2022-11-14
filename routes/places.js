@@ -87,21 +87,7 @@ Place.findByIdAndRemove(id).exec();
 res.redirect('/')
 })
 
-router.patch("/:id", function (req, res, next) {
-  
-  const id = req.params.id;
- const {name,canton,location} = req.body;
- 
- const place=Place.find((place)=>place.id==id)
- 
- 
- if(name) place.name=name; 
- if(canton) place.canton=canton; 
- if(location) place.location=location; 
- 
- res.send("place modifiée");
- 
- });
+
 
 export default router;
 
