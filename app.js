@@ -8,6 +8,7 @@ import notesRouter from "./routes/notes.js";
 import authRouter from "./routes/auth.js";
 import picturesRouter from "./routes/pictures.js";
 
+
 import mongoose from 'mongoose';
 mongoose.Promise = Promise;
 mongoose.connect('mongodb://localhost/express-api');
