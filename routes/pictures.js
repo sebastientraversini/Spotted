@@ -24,8 +24,8 @@ router.post('/', authenticate, upload.single('picture'), function (req, res, nex
 /*     const bufferImage = Buffer.from(req.file); */
     let item = {
         author: req.userId,
-         place: JSON.parse(req.body.place),  // Une place existe avant la photo, l'user choisit dans l'app la place et nous on envoie son id en body
-     picture : req.file  /* bufferImage */ 
+/*   place: JSON.parse(req.body.place),  */  // Une place existe avant la photo, l'user choisit dans l'app la place et nous on envoie son id en body
+     picture : req.file.buffer  /* bufferImage */ 
     }
 
     let data = new Picture(item);
