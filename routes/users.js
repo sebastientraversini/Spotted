@@ -6,6 +6,7 @@ import * as config from "../config.js"
 import { authenticate } from "./auth.js";
 
 
+
 const router = express.Router();
 
 router.get("/", authenticate, function (req, res, next) {
@@ -63,6 +64,7 @@ function getUserId(req, res, next) {
 //chercher by id
 router.get("/:id", getUserId, function (req, res, next) {
   //si c'est un objectId valide
+/* .populate pour avoir toutes les infos */
   res.send(req.user);
 
 });
@@ -70,29 +72,52 @@ router.get("/:id", getUserId, function (req, res, next) {
 
 //chercher photos d'un user
 router.get("/:id/pictures", getUserId, function (req, res, next) {
-
   if (req.user.pictures.length == 0) {
     res.send("pas de photo pour cet user");
   }
-  //renvoyer l'user avec cet id
-  res.send(req.user.pictures);
+
+  req.user.populate("pictures", function(err){
+    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
+    res.send(req.user.pictures);
+    })
+
+});
+
+//chercher notes d'un user
+router.get("/:id/notes", getUserId, function (req, res, next) {
+  if (req.user.pictures.length == 0) {
+    res.send("pas de notes pour cet user");
+
+  }
+
+  req.user.populate("notes", function(err){
+    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
+    res.send(req.user.notes);
+    })
+
+});
+
+//chercher places visitées d'un user
+router.get("/:id/places", getUserId, function (req, res, next) {
+
+  if (req.user.visitedPlaces.length == 0) {
+    res.send("Cet user n'a visité aucune place");
+  }
+  req.user.populate(
+    {
+    path : "notes",
+    populate : {path : "place"}
+  }, function(err){
+    let arrayPlaces = [];
+    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
+    req.user.notes.forEach((n)=>{
+      arrayPlaces.push(n.place);
+    })
+    res.send(arrayPlaces);
+    })
 });
 
 export default router;
-
-//renvoyer l'user avec cet i
-
-
-/* router.get("/:id", function (req, res, next) {
-  if(req.params.id !== "1234") {
-    throw new Error("User does not exist")
-    return
-  }
-  res.send({
-    "id" : req.params.id,
-    "nom": "ta mère"
-  });
-}); */
 
 
 

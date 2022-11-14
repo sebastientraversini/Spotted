@@ -9,8 +9,11 @@ const Schema = mongoose.Schema;
 const pictureSchema = new Schema({
 
 author: { type: Schema.Types.ObjectId, ref: 'User' },
-place: { type: Schema.Types.ObjectId, ref: 'Place' },   
 
-},{collection:'user-pictures'});
+/*  place: { type: Schema.Types.ObjectId, ref: 'Place' },  */
+picture: {type : Buffer, required: true}    
+
+
+});
 
 export default mongoose.model('Picture', pictureSchema);
