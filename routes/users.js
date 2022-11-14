@@ -19,6 +19,7 @@ router.get("/", authenticate, function (req, res, next) {
 });
 
 
+
 router.post("/", function (req, res, next) {
   //on récupère le password envoyé dans la requête
   const plainPassword = req.body.password;
