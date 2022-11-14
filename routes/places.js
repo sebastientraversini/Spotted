@@ -5,7 +5,6 @@ import Place from '../models/place.js';
 const router = express.Router();
 
 
-
 router.get("/", function (req, res, next) {
   res.send("Got a response from the Places route");
   /* Place.find().then(function (doc) {
@@ -14,10 +13,8 @@ router.get("/", function (req, res, next) {
   }) */
 });
 
-
-
 router.post('/',function (req, res, next){
-  let item = {
+let item = {
 
     name:req.body.name,
     canton:req.body.canton,
