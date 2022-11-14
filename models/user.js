@@ -20,15 +20,10 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Picture'
   }],
-
   notes: [{
     type: Schema.Types.ObjectId,
     ref: 'Note'
   }],
-  /* fonction d'aggrégation pour --> visitedPlaces: {
-    type: Array,
-    required: true
-  }, */
   passwordHash: {
     type: String,
     required: true

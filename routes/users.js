@@ -4,6 +4,8 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as config from "../config.js"
 import { authenticate } from "./auth.js";
+import Picture from "../models/picture.js";
+import Note from "../models/note.js";
 
 
 
@@ -64,7 +66,7 @@ function getUserId(req, res, next) {
 //chercher by id
 router.get("/:id", getUserId, function (req, res, next) {
   //si c'est un objectId valide
-/* .populate pour avoir toutes les infos */
+  /* .populate pour avoir toutes les infos */
   res.send(req.user);
 
 });
@@ -72,15 +74,34 @@ router.get("/:id", getUserId, function (req, res, next) {
 
 //chercher photos d'un user
 router.get("/:id/pictures", getUserId, function (req, res, next) {
-  if (req.user.pictures.length == 0) {
-    res.send("pas de photo pour cet user");
-  }
 
-  req.user.populate("pictures", function(err){
-    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
-    res.send(req.user.pictures);
-    })
 
+  Picture.aggregate([{
+    $match: { author: req.user._id }
+  },
+  {
+    $lookup: {
+      from: 'users',
+      localField: 'author',
+      foreignField: '_id',
+      as: 'licorne'
+    }
+  },
+  { $unwind: '$licorne' }], (err, results) => {
+    if (err) console.log(err)
+    console.log(results)
+  })
+
+  Picture.find().where('author').equals(req.user._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("pas de photo pour cet user");
+      return;
+    }
+
+    res.send(result);
+
+  });
 });
 
 //chercher notes d'un user
@@ -90,12 +111,14 @@ router.get("/:id/notes", getUserId, function (req, res, next) {
 
   }
 
-  req.user.populate("notes", function(err){
+  req.user.populate("notes", function (err) {
     //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
     res.send(req.user.notes);
-    })
+  })
 
 });
+
+
 
 //chercher places visitées d'un user
 router.get("/:id/places", getUserId, function (req, res, next) {
@@ -105,16 +128,35 @@ router.get("/:id/places", getUserId, function (req, res, next) {
   }
   req.user.populate(
     {
-    path : "notes",
-    populate : {path : "place"}
-  }, function(err){
-    let arrayPlaces = [];
-    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
-    req.user.notes.forEach((n)=>{
-      arrayPlaces.push(n.place);
+      path: "notes",
+      populate: { path: "place" }
+    }, function (err) {
+      let arrayPlaces = [];
+      //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
+      req.user.notes.forEach((n) => {
+        arrayPlaces.push(n.place);
+      })
+      res.send(arrayPlaces);
     })
-    res.send(arrayPlaces);
-    })
+});
+
+//supprimer un user --> uniquement si c'est soi
+router.delete("/:id", getUserId, authenticate, function (req, res, next) {
+  //vérifier si user valide
+  //vérifier si user à supprimer est = à l'utilisateur authentifié
+  /*   res.send([req.user._id,req.userId]) */
+  if (!req.user._id.equals(req.userId)) {
+    return res.status('403').send("T'as cru que tu pouvais supprimer un autre user ? Mdr")
+  }
+  /*   res.send(req.user._id) */
+  User.findOneAndDelete({ _id: req.user._id }, function (err, user) {
+    if (err) {
+      next(err);
+      return;
+    } 
+    res.send("tu t'es supprimé, bravo !")
+  })
+
 });
 
 export default router;
