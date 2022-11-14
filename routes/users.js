@@ -6,6 +6,7 @@ import * as config from "../config.js"
 import { authenticate } from "./auth.js";
 
 
+
 const router = express.Router();
 
 router.get("/", authenticate, function (req, res, next) {
@@ -115,6 +116,8 @@ router.get("/:id/places", getUserId, function (req, res, next) {
     res.send(arrayPlaces);
     })
 });
+
+export default router;
 
 
 

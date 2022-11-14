@@ -7,7 +7,6 @@ import placesRouter from "./routes/places.js";
 import notesRouter from "./routes/notes.js";
 import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
-import picturesRouter from "./routes/pictures.js";
 
 
 import mongoose from 'mongoose';
