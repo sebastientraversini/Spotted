@@ -1,6 +1,9 @@
 import express from "express";
 
 import Place from '../models/place.js';
+import Note from '../models/note.js';
+import Notes from '../routes/notes.js'
+
 
 const router = express.Router();
 
@@ -9,6 +12,28 @@ router.get("/", async function(req, res, next) {
   let limit = req.query.limit;
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
+
+  
+
+})
+
+router.get ("/:id/notes", function(req, res, next) {
+  
+  if (req.place.notes.length == 0) {
+    res.send("Aucunes notes");
+  }
+  req.place.populate(
+    {
+    path : "Notes",
+    populate : {path : "Note"}
+  }, function(err){
+    let arrayNotes = [];
+    req.place.notes.forEach((n)=>{
+      arrayPlaces.push(n.place);
+    })
+    res.send(arrayNotes);
+    })
+
 })
 
 router.post('/',function (req, res, next){
@@ -114,17 +139,17 @@ export default router;
  */
 
 /**
- * @api {post} /users/:id add Place
+ * @api {post} /places/:id add Place
  *  
  * @apiName AddPlace
  * @apiGroup Place
  * 
  * @apiParam {String} name Place name, mandatory
- * @apiParam {String} canton User canton, mandatory
+ * @apiParam {String} canton place canton, mandatory
  * @apiParam {String} location Place location, mandatory
- * @apiParam {Objects[]} pictures  User pictures, not mandatory
- * @apiParam {Strings[]} notes  User notes, not mandatory
- * @apiParam {Strings[]} tags  User tags, not mandatory
+ * @apiParam {Objects[]} pictures  place pictures, not mandatory
+ * @apiParam {Strings[]} notes  place notes, not mandatory
+ * @apiParam {Strings[]} tags  place tags, not mandatory
  * 
  * 
  * @apiParamExample Example Body:
@@ -150,30 +175,30 @@ export default router;
  * 
  * 
  * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
+ * @apiSuccess {String} firstName place name
+ * @apiSuccess {String} surname  place surname
+ * @apiSuccess {String} password  place password
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "votre user à été créé !"
+ *       "votre place à été créé !"
  *       
  *     }
  */
 
 /**
- * @api {post} /users/:id add Place
+ * @api {post} /places/:id add Place
  *  
  * @apiName AddPlace
  * @apiGroup Place
  * 
  * @apiParam {String} name Place name, mandatory
- * @apiParam {String} canton User canton, mandatory
+ * @apiParam {String} canton place canton, mandatory
  * @apiParam {String} location Place location, mandatory
- * @apiParam {Objects[]} pictures  User pictures, not mandatory
- * @apiParam {Strings[]} notes  User notes, not mandatory
- * @apiParam {Strings[]} tags  User tags, not mandatory
+ * @apiParam {Objects[]} pictures  place pictures, not mandatory
+ * @apiParam {Strings[]} notes  place notes, not mandatory
+ * @apiParam {Strings[]} tags  place tags, not mandatory
  * 
  * 
  * @apiParamExample Example Body:
@@ -200,14 +225,14 @@ export default router;
  * 
  * 
  * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
+ * @apiSuccess {String} firstName place name
+ * @apiSuccess {String} surname  place surname
+ * @apiSuccess {String} password  place password
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "votre user à été créé !"
+ *       "votre place à été créé !"
  *       
  *     }
  */
