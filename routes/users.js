@@ -124,6 +124,7 @@ const {name,surname} = req.body;
 
 const user=User.find((user)=>user.id==id)
 
+
 if(name) user.name=name; 
 if(surname) user.surname=surname; 
 
