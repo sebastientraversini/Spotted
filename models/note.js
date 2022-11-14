@@ -5,15 +5,17 @@ import places from './place.js';
 const Schema = mongoose.Schema;
 // Define the schema for notes
 const noteSchema = new Schema({
-    user: {
+    author: {
         type: Schema.Types.ObjectId,
-        ref: 'User'
+        ref: 'User', 
+        required: true,
       },
       place: {
         type: Schema.Types.ObjectId,
-        ref: 'Place'
+        ref: 'Place', 
+        required: true,
       },
-      note: {
+      stars: {
         type: Number,
           required: true,
           validate: {
@@ -28,7 +30,7 @@ const noteSchema = new Schema({
 
 // Validate a note
 function validateANote(value) {
-  return Number.isNumber(value) && isBetween1And5(value);
+  return isBetween1And5(value);
 }
 
 function isBetween1And5(value) {

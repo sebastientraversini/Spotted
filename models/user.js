@@ -1,19 +1,21 @@
 import mongoose from 'mongoose';
-import notes from './notes.js';
+import notes from './note.js';
 
 const Schema = mongoose.Schema;
 // Define the schema for users
 const userSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique :true
   },
   surname: {
     type: String,
-    required: true
-  }, pictures: {
+    required: false
+  }, 
+  pictures: {
     type: Array,
-    required: true
+    required: false
   },
   notes: [{
     type: Schema.Types.ObjectId,
