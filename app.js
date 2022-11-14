@@ -5,6 +5,7 @@ import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import placesRouter from "./routes/places.js";
 import notesRouter from "./routes/notes.js";
+import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
 import picturesRouter from "./routes/pictures.js";
 
@@ -15,7 +16,11 @@ mongoose.connect('mongodb://localhost/express-api');
 
 const app = express();
 
-app.use(logger("dev"));
+if (process.env.NODE_ENV !== 'test') {
+  app.use(logger('dev'));
+}
+
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -25,7 +30,7 @@ app.use("/places", placesRouter);
 app.use("/notes", notesRouter);
 app.use("/pictures", picturesRouter);
 app.use("/login", authRouter);
-
+app.use("/pictures", picturesRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));
@@ -43,3 +48,4 @@ app.use(function (err, req, res, next) {
 });
 
 export default app;
+

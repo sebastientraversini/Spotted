@@ -1,21 +1,26 @@
 import mongoose from 'mongoose';
 import notes from './note.js';
+
 import pictures from './picture.js';
+
 
 const Schema = mongoose.Schema;
 // Define the schema for users
 const userSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique :true
   },
   surname: {
     type: String,
+
     required: true
   }, pictures: [{
     type: Schema.Types.ObjectId,
     ref: 'Picture'
   }],
+
   notes: [{
     type: Schema.Types.ObjectId,
     ref: 'Note'

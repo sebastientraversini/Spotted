@@ -1,11 +1,13 @@
 import express from "express";
 const router = express.Router();
 import { authenticate } from "./auth.js";
+
 import Picture from '../models/picture.js';
 //multer pour envoyer form multi-data
 import multer from "multer";
 const upload = multer();
 /* optionnal --> const upload = multer({ dest: 'uploads/' }) --> otherwise saved on memory */
+
 
 router.get("/", function (req, res, next) {
 
@@ -15,6 +17,7 @@ router.get("/", function (req, res, next) {
         }
         res.send(pictures);
       }); */
+
 
     res.send("Got a response from the notes route and it works well");
 });
@@ -43,3 +46,4 @@ router.post('/', authenticate, upload.single('picture'), function (req, res, nex
 })
 
 export default router;
+
