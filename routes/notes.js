@@ -44,8 +44,9 @@ const router = express.Router();
  *  3
  * }",
  * "notes": "{
- *        stars : 3,
- *        text: tréjoli,
+ *        1,
+ *       2,
+ *     3
  *          }",
  * "tags": "{
  * 1,

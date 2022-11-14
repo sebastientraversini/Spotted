@@ -50,6 +50,8 @@ router.get("/", authenticate, function (req, res, next) {
   });
 });
 
+
+
 /**
  * @api {post} /users/:id add User
  *  

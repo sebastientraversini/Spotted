@@ -79,8 +79,9 @@ router.get("/", function (req, res, next) {
  *    3
  *   } ,
  * "notes": "{
- *       stars : 3,
- *      text: tréjoli
+ *       1,
+ * 2,
+ * 3
  *  }",
  * "tags": "{chateau,
  *         Lac}"
