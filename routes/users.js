@@ -5,38 +5,6 @@ import jwt from "jsonwebtoken";
 import * as config from "../config.js"
 import { authenticate } from "./auth.js";
 
-/**
- * @api {get} /users/:id Request a user's information
- *  
- * @apiName GetUser
- * @apiGroup User
- *
- * @apiParam {Number} id User id 
- *
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} lastName  User surname
- * @apiSuccess {Objects[]} pictures  User pictures
- * @apiSuccess {Strings[]} notes  User notes
- * @apiSuccess {String} passwordHash  User passwordHash
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "firstname": "Florian",
- *       "lastname": "Quadri",
- *        "pictures": "{
- *        1,
- *        2,
- *        3
- *        }",
- * "notes": "{
- *        1,
- *        2,
- *        3
- *          }",
- * "passwordHash": "s234jdsl31osaweak23o",
- *     }
- */
 
 const router = express.Router();
 
@@ -50,38 +18,6 @@ router.get("/", authenticate, function (req, res, next) {
   });
 });
 
-/**
- * @api {post} /users/:id add User
- *  
- * @apiName AddUser
- * @apiGroup User
- * 
- * @apiParam {String} firstname User firstname, mandatory
- * @apiParam {String} surname User surname, mandatory
- * @apiParam {String} password User password, mandatory
- * @apiParam {Objects[]} pictures  User pictures, not mandatory
- * @apiParam {Strings[]} notes  User notes, not mandatory
- * 
- * 
- * @apiParamExample Example Body:
- *    {
- *     "firstname": "Florian",
- *    "surname": "Quadri",
- *   "password": "123456"
- *   } 
- * 
- * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre user à été créé !"
- *       
- *     }
- */
 
 router.post("/", function (req, res, next) {
   //on récupère le password envoyé dans la requête
@@ -141,6 +77,8 @@ router.get("/:id/pictures", getUserId, function (req, res, next) {
   res.send(req.user.pictures);
 });
 
+export default router;
+
 //renvoyer l'user avec cet i
 
 
@@ -155,4 +93,70 @@ router.get("/:id/pictures", getUserId, function (req, res, next) {
   });
 }); */
 
-export default router;
+
+
+/**
+ * @api {get} /users/:id Request a user's information
+ *  
+ * @apiName GetUser
+ * @apiGroup User
+ *
+ * @apiParam {Number} id User id 
+ *
+ * @apiSuccess {String} firstName User name
+ * @apiSuccess {String} lastName  User surname
+ * @apiSuccess {Objects[]} pictures  User pictures
+ * @apiSuccess {Strings[]} notes  User notes
+ * @apiSuccess {String} passwordHash  User passwordHash
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "firstname": "Florian",
+ *       "lastname": "Quadri",
+ *        "pictures": "{
+ *        1,
+ *        2,
+ *        3
+ *        }",
+ * "notes": "{
+ *        1,
+ *        2,
+ *        3
+ *          }",
+ * "passwordHash": "s234jdsl31osaweak23o",
+ *     }
+ */
+
+/**
+ * @api {post} /users/:id add User
+ *  
+ * @apiName AddUser
+ * @apiGroup User
+ * 
+ * @apiParam {String} firstname User firstname, mandatory
+ * @apiParam {String} surname User surname, mandatory
+ * @apiParam {String} password User password, mandatory
+ * @apiParam {Objects[]} pictures  User pictures, not mandatory
+ * @apiParam {Strings[]} notes  User notes, not mandatory
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "firstname": "Florian",
+ *    "surname": "Quadri",
+ *   "password": "123456"
+ *   } 
+ * 
+ * 
+ * @apiSuccess {String} firstName User name
+ * @apiSuccess {String} surname  User surname
+ * @apiSuccess {String} password  User password
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre user à été créé !"
+ *       
+ *     }
+ */
