@@ -117,6 +117,21 @@ router.get("/:id/places", getUserId, function (req, res, next) {
     })
 });
 
+router.patch("/:id", getUserId, function (req, res, next) {
+  
+ const id = req.params.id;
+const {name,surname} = req.body;
+
+const user=User.find((user)=>user.id==id)
+
+if(name) user.name=name; 
+if(surname) user.surname=surname; 
+
+res.send("user modifié");
+
+});
+
+
 export default router;
 
 
