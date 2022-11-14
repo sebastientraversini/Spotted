@@ -4,23 +4,6 @@ import Place from '../models/place.js';
 
 const router = express.Router();
 
-let offset = 0;
-let limit = 20;
-
-
-// router.get("/:nom-:prenom")
-// req.params.nom // nom
-// router.get("/pictures?_start={}&limit={}".format(offset,limit), function (req, res, next) {
-//   /* res.send("Got a response from the Places route"); */
-  
-//    Place.find().then(function (doc) {
-//     res.render('index',{index:doc});
-
-//   })
- 
-
-// });
-
 
 router.get("/", async function(req, res, next) {
   let limit = req.query.limit;
