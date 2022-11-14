@@ -8,6 +8,7 @@ import notesRouter from "./routes/notes.js";
 import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
 
+
 import mongoose from 'mongoose';
 mongoose.Promise = Promise;
 mongoose.connect('mongodb://localhost/express-api');
@@ -26,6 +27,7 @@ app.use("/", indexRouter);
 app.use("/users", usersRouter);
 app.use("/places", placesRouter);
 app.use("/notes", notesRouter);
+app.use("/pictures", picturesRouter);
 app.use("/login", authRouter);
 app.use("/pictures", picturesRouter);
 // catch 404 and forward to error handler

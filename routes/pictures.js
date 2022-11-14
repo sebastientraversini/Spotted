@@ -1,16 +1,13 @@
 import express from "express";
 const router = express.Router();
 import { authenticate } from "./auth.js";
-import Pictures from '../models/picture.js';
 
-/**
- * @api {get} /pictures/:id Request a picture's information
- *  
- * @apiName GetPicture
- * @apiGroup Picture
- *
- * @apiParam {Number} id Picture id 
-*/
+import Picture from '../models/picture.js';
+//multer pour envoyer form multi-data
+import multer from "multer";
+const upload = multer();
+/* optionnal --> const upload = multer({ dest: 'uploads/' }) --> otherwise saved on memory */
+
 
 router.get("/", function (req, res, next) {
 
@@ -21,28 +18,32 @@ router.get("/", function (req, res, next) {
         res.send(pictures);
       }); */
 
-  res.send("Got a response from the notes route and it works well");
+
+    res.send("Got a response from the notes route and it works well");
 });
 
-/**
- * @api {post} /pictures/:id add Picture
- *  
- * @apiName AddPicture
- * @apiGroup Picture
- *
- * @apiParam {Number} id Picture id 
-*/
-
-router.post('/post', authenticate, function (req, res, next){
+//mettre npm multer et installer pour que cela fonctionne en renvoyant req.file
+router.post('/', authenticate, upload.single('picture'), function (req, res, next) {
+/*     const bufferImage = Buffer.from(req.file); */
     let item = {
-  author: idUser,
-  place: req.body.place
-      
+        author: req.userId,
+/*   place: JSON.parse(req.body.place),  */  // Une place existe avant la photo, l'user choisit dans l'app la place et nous on envoie son id en body
+     picture : req.file.buffer  /* bufferImage */ 
     }
-    let data = new Picture(item);   
-  
-    data.save();
-    res.redirect('/')
-  })
+
+    let data = new Picture(item);
+
+    //parser le json pour envoyer en form-data
+
+    data.save(function (err, data) {
+        if (err) {
+            next(err)
+            return;
+        };
+        res.send(data)
+    });
+
+})
 
 export default router;
+

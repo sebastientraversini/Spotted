@@ -1,7 +1,9 @@
 import express from "express";
 import Note from '../models/note.js';
+
 import place from "../models/place.js";
 import { authenticate } from "./auth.js";
+
 
 const router = express.Router();
 
@@ -34,7 +36,7 @@ router.get("/",authenticate, function (req, res, next) {
       else {
         res.send(savedNote);
       }
-    });
+  });
   })
 
 
