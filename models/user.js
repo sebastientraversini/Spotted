@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import notes from './notes.js';
+import notes from './note.js';
+import pictures from './picture.js';
 
 const Schema = mongoose.Schema;
 // Define the schema for users
@@ -11,13 +12,13 @@ const userSchema = new Schema({
   surname: {
     type: String,
     required: true
-  }, pictures: {
-    type: Array,
-    required: true
-  },
+  }, pictures: [{
+    type: Schema.Types.ObjectId,
+    ref: 'Picture'
+  }],
   notes: [{
     type: Schema.Types.ObjectId,
-    ref: 'notes'
+    ref: 'Note'
   }],
   /* fonction d'aggrégation pour --> visitedPlaces: {
     type: Array,
