@@ -16,6 +16,7 @@ let limit = 20;
 //    Place.find().then(function (doc) {
 //     res.render('index',{index:doc});
 
+<<<<<<< Updated upstream
 //   })
  
 
@@ -27,6 +28,8 @@ router.get("/", async function(req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 })
+=======
+>>>>>>> Stashed changes
 
 router.post('/',function (req, res, next){
 let item = {
@@ -160,6 +163,56 @@ export default router;
  * "notes": "{
  *       stars : 3,
  *      text: tréjoli
+ *  }",
+ * "tags": "{chateau,
+ *         Lac}"
+ * }
+ * 
+ * 
+ * 
+ * @apiSuccess {String} firstName User name
+ * @apiSuccess {String} surname  User surname
+ * @apiSuccess {String} password  User password
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre user à été créé !"
+ *       
+ *     }
+ */
+
+/**
+ * @api {post} /users/:id add Place
+ *  
+ * @apiName AddPlace
+ * @apiGroup Place
+ * 
+ * @apiParam {String} name Place name, mandatory
+ * @apiParam {String} canton User canton, mandatory
+ * @apiParam {String} location Place location, mandatory
+ * @apiParam {Objects[]} pictures  User pictures, not mandatory
+ * @apiParam {Strings[]} notes  User notes, not mandatory
+ * @apiParam {Strings[]} tags  User tags, not mandatory
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "name": "Chateau de Chillon",
+ *    "canton": "Vaud",
+ *   "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }",
+ * "pictures": "{
+ *       1,
+ *      2,
+ *    3
+ *   } ,
+ * "notes": "{
+ *       1,
+ * 2,
+ * 3
  *  }",
  * "tags": "{chateau,
  *         Lac}"
