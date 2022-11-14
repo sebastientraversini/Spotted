@@ -16,7 +16,6 @@ let limit = 20;
 //    Place.find().then(function (doc) {
 //     res.render('index',{index:doc});
 
-<<<<<<< Updated upstream
 //   })
  
 
@@ -28,8 +27,6 @@ router.get("/", async function(req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 })
-=======
->>>>>>> Stashed changes
 
 router.post('/',function (req, res, next){
 let item = {
