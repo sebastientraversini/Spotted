@@ -140,6 +140,7 @@ router.get("/:id/places", getUserId, function (req, res, next) {
     })
 });
 
+
 //supprimer un user --> uniquement si c'est soi
 router.delete("/:id", getUserId, authenticate, function (req, res, next) {
   //vérifier si user valide
@@ -158,6 +159,27 @@ router.delete("/:id", getUserId, authenticate, function (req, res, next) {
   })
 
 });
+
+
+router.patch("/:id", getUserId, async function (req, res, next) {
+
+
+  const updated = await User.update(
+    {
+      _id: req.user.id,
+    },
+    {
+      name: req.body.name,
+      surname: req.body.surname
+    }
+  );
+
+  console.log(updated);
+
+  res.send("user modifié");
+});
+
+
 
 export default router;
 

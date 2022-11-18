@@ -4,66 +4,34 @@ import Place from '../models/place.js';
 
 const router = express.Router();
 
+
 import { authenticate } from "./auth.js";
 
 
-router.get("/", function (req, res, next) {
-  res.send("Got a response from the Places route");
-  /* Place.find().then(function (doc) {
-    res.render('index',{index:doc});
+let offset = 0;
+let limit = 20;
 
-  }) */
-});
 
-/**
- * @api {post} /users/:id add Place
- *  
- * @apiName AddPlace
- * @apiGroup Place
- * 
- * @apiParam {String} name Place name, mandatory
- * @apiParam {String} canton User canton, mandatory
- * @apiParam {String} location Place location, mandatory
- * @apiParam {Objects[]} pictures  User pictures, not mandatory
- * @apiParam {Strings[]} notes  User notes, not mandatory
- * @apiParam {Strings[]} tags  User tags, not mandatory
- * 
- * 
- * @apiParamExample Example Body:
- *    {
- *     "name": "Chateau de Chillon",
- *    "canton": "Vaud",
- *   "location": "{
- *        1324324234.23,
- *        234234234234.76556
- *        }",
- * "pictures": "{
- *       1,
- *      2,
- *    3
- *   } ,
- * "notes": "{
- *       1,
- * 2,
- * 3
- *  }",
- * "tags": "{chateau,
- *         Lac}"
- * }
- * 
- * 
- * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre user à été créé !"
- *       
- *     }
- */
+
+// router.get("/:nom-:prenom")
+// req.params.nom // nom
+// router.get("/pictures?_start={}&limit={}".format(offset,limit), function (req, res, next) {
+//   /* res.send("Got a response from the Places route"); */
+  
+//    Place.find().then(function (doc) {
+//     res.render('index',{index:doc});
+
+//   })
+ 
+
+// });
+
+
+router.get("/", async function(req, res, next) {
+  let limit = req.query.limit;
+  const places = await Place.find({}).limit(limit).exec()
+  res.send(places)
+})
 
 router.post('/',authenticate, function (req, res, next){
 let item = {
@@ -123,6 +91,8 @@ Place.findByIdAndRemove(id).exec();
 
 res.redirect('/')
 })
+
+
 
 export default router;
 
@@ -197,6 +167,56 @@ export default router;
  * "notes": "{
  *       stars : 3,
  *      text: tréjoli
+ *  }",
+ * "tags": "{chateau,
+ *         Lac}"
+ * }
+ * 
+ * 
+ * 
+ * @apiSuccess {String} firstName User name
+ * @apiSuccess {String} surname  User surname
+ * @apiSuccess {String} password  User password
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre user à été créé !"
+ *       
+ *     }
+ */
+
+/**
+ * @api {post} /users/:id add Place
+ *  
+ * @apiName AddPlace
+ * @apiGroup Place
+ * 
+ * @apiParam {String} name Place name, mandatory
+ * @apiParam {String} canton User canton, mandatory
+ * @apiParam {String} location Place location, mandatory
+ * @apiParam {Objects[]} pictures  User pictures, not mandatory
+ * @apiParam {Strings[]} notes  User notes, not mandatory
+ * @apiParam {Strings[]} tags  User tags, not mandatory
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "name": "Chateau de Chillon",
+ *    "canton": "Vaud",
+ *   "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }",
+ * "pictures": "{
+ *       1,
+ *      2,
+ *    3
+ *   } ,
+ * "notes": "{
+ *       1,
+ * 2,
+ * 3
  *  }",
  * "tags": "{chateau,
  *         Lac}"
