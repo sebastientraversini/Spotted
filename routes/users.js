@@ -106,39 +106,68 @@ router.get("/:id/pictures", getUserId, function (req, res, next) {
 
 //chercher notes d'un user
 router.get("/:id/notes", getUserId, function (req, res, next) {
-  if (req.user.pictures.length == 0) {
-    res.send("pas de notes pour cet user");
 
-  }
+  Note.find().where('author').equals(req.user._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("cet user n'a décerné aucune note à une place");
+      return;
+    }
 
-  req.user.populate("notes", function (err) {
-    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
-    res.send(req.user.notes);
-  })
+    res.send(result);
+
+  });
 
 });
 
 
 
-//chercher places visitées d'un user
-router.get("/:id/places", getUserId, function (req, res, next) {
+//chercher places visitées d'un user (en passant par Notes)
+router.get("/:id/visitedPlaces", getUserId, function (req, res, next) {
 
-  if (req.user.visitedPlaces.length == 0) {
-    res.send("Cet user n'a visité aucune place");
-  }
-  req.user.populate(
-    {
-      path: "notes",
-      populate: { path: "place" }
-    }, function (err) {
-      let arrayPlaces = [];
-      //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
-      req.user.notes.forEach((n) => {
-        arrayPlaces.push(n.place);
-      })
-      res.send(arrayPlaces);
+  Note.find().where('author').equals(req.user._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("cet user n'a visité aucune place");
+      return;
+    }
+
+    let visitedPlaces = [];
+
+    result.forEach((n) => {
+      visitedPlaces.push(n.place)
     })
+//map de l'array pour transformer l'objectId en String pour pouvoir le filtrer
+    const mappedFilterArray = visitedPlaces.map(place => place.toString());
+
+    let uniqueVisitedPlaces = Array.from(new Set(mappedFilterArray));
+
+    console.log(uniqueVisitedPlaces)
+
+    res.send(uniqueVisitedPlaces);
+
+  });
+
 });
+
+
+
+/* if (req.user.visitedPlaces.length == 0) {
+  res.send("Cet user n'a visité aucune place");
+}
+req.user.populate(
+  {
+    path: "notes",
+    populate: { path: "place" }
+  }, function (err) {
+    let arrayPlaces = [];
+    //renvoyer un tableau d'objets photo --> populate permet d'éviter de recevoir juste l'id de la photo, mais tout l'objet
+    req.user.notes.forEach((n) => {
+      arrayPlaces.push(n.place);
+    })
+    res.send(arrayPlaces);
+  })
+}); */
 
 
 //supprimer un user --> uniquement si c'est soi
@@ -146,6 +175,7 @@ router.delete("/:id", getUserId, authenticate, function (req, res, next) {
   //vérifier si user valide
   //vérifier si user à supprimer est = à l'utilisateur authentifié
   /*   res.send([req.user._id,req.userId]) */
+  //req.user._id vient de getUserId et req.userId est l'id du user authentifié
   if (!req.user._id.equals(req.userId)) {
     return res.status('403').send("T'as cru que tu pouvais supprimer un autre user ? Mdr")
   }
@@ -154,29 +184,30 @@ router.delete("/:id", getUserId, authenticate, function (req, res, next) {
     if (err) {
       next(err);
       return;
-    } 
+    }
     res.send("tu t'es supprimé, bravo !")
   })
 
 });
 
 
-router.patch("/:id", getUserId, async function (req, res, next) {
+router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
+  console.log(req.body.name)
+
+  const filter = { _id: req.user._id };
+  const update = {
+    name: req.body.name,
+    surname: req.body.surname
+  }
+
+  if (!req.user._id.equals(req.userId)) {
+    return res.status('403').send("T'as cru que tu pouvais modifier un autre user ? Eh bah non  !")
+  }
+
+  const userUpdated = await User.findOneAndUpdate(filter, update);
+  res.send("Bien joué l'user a été update");
 
 
-  const updated = await User.update(
-    {
-      _id: req.user.id,
-    },
-    {
-      name: req.body.name,
-      surname: req.body.surname
-    }
-  );
-
-  console.log(updated);
-
-  res.send("user modifié");
 });
 
 

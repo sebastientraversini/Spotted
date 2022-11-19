@@ -14,7 +14,6 @@ const userSchema = new Schema({
   },
   surname: {
     type: String,
-
     required: true
   }, pictures: [{
     type: Schema.Types.ObjectId,

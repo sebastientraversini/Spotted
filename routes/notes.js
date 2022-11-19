@@ -10,7 +10,13 @@ const router = express.Router();
 
 
 router.get("/",authenticate, function (req, res, next) {
-  res.send("wallah ça fonctionne");
+  Note.find().exec(function (err, users) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(users);
+  });
 });
 /* router.get("/hello", function (req, res, next) {
     res.send("hello");
@@ -81,7 +87,13 @@ router.get("/",authenticate, function (req, res, next) {
 export default router;
 
 router.get("/",authenticate, function (req, res, next) {
-  res.send("wallah ça fonctionne");
+  Note.find().exec(function (err, users) {
+    if (err) {
+      return next(err);
+    }
+
+    res.send(users);
+  });
 });
 
 
