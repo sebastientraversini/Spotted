@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "nodemon",
     "start": "node ./bin/start",
-    "test": "cross-env LOCAL_MONGODB_URI=mongodb://localhost/express-api-test node --experimental-vm-modules node_modules/.bin/jest"
+    "test": "cross-env LOCAL_MONGODB_URI=mongodb://localhost/express-api-test node --experimental-vm-modules node_modules/.bin/jest",
+    "apidoc": "apidoc -i routes -o docs"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -21,6 +22,7 @@
     "nodejs": "^0.0.0"
   },
   "devDependencies": {
+    "apidoc": "^0.53.1",
     "cross-env": "^7.0.3",
     "jest": "^29.3.1",
     "jest-extended": "^3.1.0",
@@ -28,6 +30,8 @@
     "supertest": "^6.3.1"
   },
   "jest": {
-    "setupFilesAfterEnv": ["jest-extended/all"]
+    "setupFilesAfterEnv": [
+      "jest-extended/all"
+    ]
   }
 }

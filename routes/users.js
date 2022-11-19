@@ -219,7 +219,7 @@ export default router;
  */
 
 /**
- * @api {post} /users/:id add User
+ * @api {post} /users/ add User
  *  
  * @apiName AddUser
  * @apiGroup User
