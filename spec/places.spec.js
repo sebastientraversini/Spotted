@@ -47,12 +47,16 @@ describe("DELETE /places", function () {
         tags: "JARDIN",
       }),
     ]);
+
+    let johnDoe = await Promise.all([
+    User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' })
+    ]);
   });
 
   test("should delete place", async function () {
     const count = await Place.estimatedDocumentCount();
     // console.log(count)
-    const token = await generateValidJwt(Place);
+    const token = await generateValidJwt(johnDoe);
     const res = await supertest(app)
       .delete('/places/${place.id}')
       .set('Authorization', `Bearer ${token}`)
