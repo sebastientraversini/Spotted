@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import pictures from './picture.js';
 import notes from './note.js';
+import users from './user.js';
 
 
 const Schema = mongoose.Schema;
@@ -8,33 +9,37 @@ const Schema = mongoose.Schema;
 
 
 const placeSchema = new Schema({
-  name: { type : String,
-  required : true
-},
+  name: {
+    type: String,
+    required: true
+  },
+  creator: { type: Schema.Types.ObjectId, ref: 'User', required:true},
 
 
-    canton: {type: String,
-    required:true},
-    location: {
-        type: {
-          type: String,
-          required: true,
-          enum: [ 'Point' ]
-        },
-        coordinates: {
-          type: [ Number ],
-          required: true,
-          validate: {
-            validator: validateGeoJsonCoordinates,
-            message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array'
-          }
-        }
-      },
-    pictures: [{ type: Schema.Types.ObjectId, ref: 'pictures' }],
-    notes : [{ type: Schema.Types.ObjectId, ref: 'notes' }],
-    tags : [{type :String, required: true}]
+  canton: {
+    type: String,
+    required: true
+  },
+  location: {
+    type: {
+      type: String,
+      required: true,
+      enum: ['Point']
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      validate: {
+        validator: validateGeoJsonCoordinates,
+        message: '{VALUE} is not a valid longitude/latitude(/altitude) coordinates array'
+      }
+    }
+  },
+  pictures: [{ type: Schema.Types.ObjectId, ref: 'Picture' }],
+  notes: [{ type: Schema.Types.ObjectId, ref: 'Note' }],
+  tags: [{ type: String, required: true }]
 
-},{collection:'user-places'});
+}, { collection: 'user-places' });
 
 
 

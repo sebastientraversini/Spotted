@@ -18,17 +18,17 @@ let limit = 20;
 // req.params.nom // nom
 // router.get("/pictures?_start={}&limit={}".format(offset,limit), function (req, res, next) {
 //   /* res.send("Got a response from the Places route"); */
-  
+
 //    Place.find().then(function (doc) {
 //     res.render('index',{index:doc});
 
 //   })
- 
+
 
 // });
 
 
-router.get("/", async function(req, res, next) {
+router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
@@ -60,21 +60,21 @@ router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
 
   let item = {
     author: req.userId,
-    stars:req.body.stars,
-    text:req.body.text,
+    stars: req.body.stars,
+    text: req.body.text,
     place: req.place._id
   }
 
   let data = new Note(item);
 
-  data.save(function(err, savedNote) {
+  data.save(function (err, savedNote) {
     if (err) {
       next(err);
     }
     else {
       res.send(savedNote);
     }
-});
+  });
 });
 
 //chercher toutes les notes liées à une place
@@ -94,45 +94,45 @@ router.get("/:id/notes", getPlaceId, function (req, res, next) {
 });
 
 
-router.post('/',authenticate, function (req, res, next){
-let item = {
-
-    name:req.body.name,
-    canton:req.body.canton,
-    location:req.body.location,
-    pictures:req.body.pictures,
-    notes:req.body.note,
-    tags:req.body.tags,
+router.post('/', authenticate, function (req, res, next) {
+  let item = {
+    creator: req.userId,
+    name: req.body.name,
+    canton: req.body.canton,
+    location: req.body.location,
+    pictures: req.body.pictures,
+    notes: req.body.note,
+    tags: req.body.tags,
   }
   let data = new Place(item);
 
 
-  data.save(function(err, savedPlace) {
+  data.save(function (err, savedPlace) {
     if (err) {
       next(err);
     }
     res.send(savedPlace);
   });
- 
+
 })
 
 
-router.post('/update',function (req, res, next){
+router.post('/update', function (req, res, next) {
   let item = {
 
-    name:req.body.name,
-    canton:req.body.canton,
-    location:req.body.location,
-    pictures:req.body.pictures,
-    note:req.body.note,
-    tags:req.body.tags,
+    name: req.body.name,
+    canton: req.body.canton,
+    location: req.body.location,
+    pictures: req.body.pictures,
+    note: req.body.note,
+    tags: req.body.tags,
   }
   let id = req.body.id;
-  Place.findById(id).then(function (err,doc) {
-    if (err){
+  Place.findById(id).then(function (err, doc) {
+    if (err) {
       console.error('Pas de truc trouvé')
     }
-    doc.name= req.body.name;
+    doc.name = req.body.name;
     doc.canton = req.body.canton;
     doc.location = req.body.location;
     doc.pictures = req.body.pictures;
@@ -146,11 +146,30 @@ router.post('/update',function (req, res, next){
 
 
 
-router.post('/delete',function (req, res, next){
-let id = req.body.id;
-Place.findByIdAndRemove(id).exec();
+router.delete('/:id', getPlaceId, authenticate, function (req, res, next) {
 
-res.redirect('/')
+  Place.findById(req.place._id, function (err, docs) {
+    if (err) {
+      console.log(err);
+    }
+    else {
+      console.log(docs.creator, req.userId)
+
+      if (!docs.creator.equals(req.userId)) {
+        return res.status('403').send("You can only delete places you created")
+      }
+
+      Place.findOneAndDelete({ _id: req.place._id }, function (err, user) {
+        if (err) {
+          next(err);
+          return;
+        }
+        res.send("tu as supprimé la place, bravo !")
+      })
+    }
+  });
+
+
 })
 
 
