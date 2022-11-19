@@ -1,6 +1,7 @@
 import express from "express";
 
 import Place from '../models/place.js';
+import Note from '../models/note.js';
 
 const router = express.Router();
 
@@ -32,6 +33,66 @@ router.get("/", async function(req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 })
+
+//chercher by id
+router.get("/:id", getPlaceId, function (req, res, next) {
+  res.send(req.place);
+});
+
+function getPlaceId(req, res, next) {
+  if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    Place.findById(req.params.id).exec(function (err, place) {
+      if (err) {
+        return next(err);
+      } else if (!place) {
+        return res.status(404).send("Il n'existe pas de place avec cet id")
+      }
+      req.place = place;
+      next();
+    });
+  } else {
+    return res.status(404).send("Il n'existe pas de place avec cet id")
+  }
+}
+
+//poster une nouvelle note pour une place existante
+router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
+
+  let item = {
+    author: req.userId,
+    stars:req.body.stars,
+    text:req.body.text,
+    place: req.place._id
+  }
+
+  let data = new Note(item);
+
+  data.save(function(err, savedNote) {
+    if (err) {
+      next(err);
+    }
+    else {
+      res.send(savedNote);
+    }
+});
+});
+
+//chercher toutes les notes liées à une place
+router.get("/:id/notes", getPlaceId, function (req, res, next) {
+
+  Note.find().where('place').equals(req.place._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("pas de notes crées pour cette place");
+      return;
+    }
+
+    res.send(result);
+
+  });
+
+});
+
 
 router.post('/',authenticate, function (req, res, next){
 let item = {

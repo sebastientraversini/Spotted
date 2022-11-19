@@ -23,6 +23,7 @@ const noteSchema = new Schema({
           validate: {
             validator: validateANote,
             message: '{VALUE} is not a valid note'
+            message: '{VALUE} is not a valid note, it must be between 1 and 5'
           }
         },
       text: {
