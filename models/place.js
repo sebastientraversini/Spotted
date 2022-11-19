@@ -30,9 +30,9 @@ const placeSchema = new Schema({
           }
         }
       },
-    pictures: [{ type: Schema.Types.ObjectId, ref: 'pictures' }],
-    notes : { type: Schema.Types.ObjectId, ref: 'notes' },
-    tags : {type :String, required: true}
+    pictures: [{ type: Schema.Types.ObjectId, ref: 'Picture' }],
+    notes : [{ type: Schema.Types.ObjectId, ref: 'Note' }],
+    tags : [{type :String, required: true}]
 
 },{collection:'user-places'});
 

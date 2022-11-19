@@ -11,41 +11,14 @@ const router = express.Router();
 router.get("/",authenticate, function (req, res, next) {
   res.send("wallah ça fonctionne");
 });
-/* router.get("/hello", function (req, res, next) {
-    res.send("hello");
-  }); */
-
-  
 
 
 
 
-  router.post('/insert',function (req, res, next){
+
+  router.post('/',function (req, res, next){
     let item = {
-      author: req.userId,
-      stars:req.body.stars,
-      text:req.body.text,
-      place: req.body.place
-    }
-    let data = new Note(item);
-
-    data.save(function(err, savedNote) {
-      if (err) {
-        next(err);
-      }
-      else {
-        res.send(savedNote);
-      }
-  });
-  })
-
-
-
-
-
-  router.post('/insert',function (req, res, next){
-    let item = {
-      author: req.userId,
+      author: req.body.author,
       stars:req.body.stars,
       text:req.body.text,
       place: req.body.place
@@ -68,11 +41,6 @@ export default router;
 router.get("/",authenticate, function (req, res, next) {
   res.send("wallah ça fonctionne");
 });
-
-
-  
-
-
 
   /**
  * @api {post} /notes/:id add Note

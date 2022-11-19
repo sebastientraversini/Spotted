@@ -19,21 +19,35 @@ router.get("/", async function(req, res, next) {
 
 router.get ("/:id/notes", function(req, res, next) {
   
-  if (req.place.notes.length == 0) {
-    res.send("Aucunes notes");
-  }
-  req.place.populate(
-    {
-    path : "Notes",
-    populate : {path : "Note"}
-  }, function(err){
-    let arrayNotes = [];
-    req.place.notes.forEach((n)=>{
-      arrayPlaces.push(n.place);
-    })
-    res.send(arrayNotes);
-    })
+console.log("on est arrivés dans la route");
 
+  /* if (req.place.notes.length == 0) {
+    res.send("Aucunes notes");
+  } */
+test();
+
+  async function test (){
+    req.place.populate(
+      {
+      path : "Notes",
+      populate : {path : "Note"}
+    }, 
+    
+     await function(err){
+      let arrayNotes = [];
+      req.place.notes.forEach((n)=>{
+        arrayPlaces.push(n.place);
+      })
+      res.send(arrayNotes);
+      })
+
+  }
+  
+
+})
+
+router.get("/:id", function(req, res, next){
+  res.send(req.place);
 })
 
 router.post('/',function (req, res, next){
@@ -88,11 +102,13 @@ router.post('/update',function (req, res, next){
 
 
 
-router.post('/delete',function (req, res, next){
+router.delete('/:id',function (err, req, res, next){
 let id = req.body.id;
 Place.findByIdAndRemove(id).exec();
-
-res.redirect('/')
+if (err){
+  console.error('Pas de truc trouvé')
+}
+res.send('Place bien deleted')
 })
 
 export default router;
@@ -168,56 +184,6 @@ export default router;
  * "notes": "{
  *       stars : 3,
  *      text: tréjoli
- *  }",
- * "tags": "{chateau,
- *         Lac}"
- * }
- * 
- * 
- * 
- * @apiSuccess {String} firstName place name
- * @apiSuccess {String} surname  place surname
- * @apiSuccess {String} password  place password
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre place à été créé !"
- *       
- *     }
- */
-
-/**
- * @api {post} /places/:id add Place
- *  
- * @apiName AddPlace
- * @apiGroup Place
- * 
- * @apiParam {String} name Place name, mandatory
- * @apiParam {String} canton place canton, mandatory
- * @apiParam {String} location Place location, mandatory
- * @apiParam {Objects[]} pictures  place pictures, not mandatory
- * @apiParam {Strings[]} notes  place notes, not mandatory
- * @apiParam {Strings[]} tags  place tags, not mandatory
- * 
- * 
- * @apiParamExample Example Body:
- *    {
- *     "name": "Chateau de Chillon",
- *    "canton": "Vaud",
- *   "location": "{
- *        1324324234.23,
- *        234234234234.76556
- *        }",
- * "pictures": "{
- *       1,
- *      2,
- *    3
- *   } ,
- * "notes": "{
- *       1,
- * 2,
- * 3
  *  }",
  * "tags": "{chateau,
  *         Lac}"

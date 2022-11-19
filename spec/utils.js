@@ -1,11 +1,13 @@
 import User from "../models/user.js"
 import {jwtSecret} from "../config.js"
+import Place from '../models/place.js'
 
 
 
 export const cleanUpDatabase = async function() {
   await Promise.all([
-    User.deleteMany()
+    User.deleteMany(),
+    Place.deleteMany()
   ]);
 };
 
@@ -25,3 +27,4 @@ export function generateValidJwt(user) {
     });
   });
 }
+

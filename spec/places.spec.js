@@ -1,36 +1,74 @@
 import supertest from "supertest";
 import app from "../app.js";
 import mongoose from "mongoose";
-import Place from "../models/place.js"
-
+import Place from "../models/place.js";
+import { cleanUpDatabase, generateValidJwt } from "./utils.js";
 
 afterAll(async () => {
-    await mongoose.disconnect();
-  });
-  
+  await mongoose.disconnect();
+});
+
 beforeEach(cleanUpDatabase);
 
-describe("POST /places/delete", function () {
-  test("should delete a user", async function () {
+describe("POST /places/", function () {
+  test("should add a place", async function () {
     const res = await supertest(app)
-      .post("/users")
+      .post("/places")
       .send({
-        name: "John Doe",
-        password: "1234",
+        name: "Test",
+        canton: "VD",
+        location: {
+          type: "Point",
+          coordinates: [120.0, 0.5],
+        },
+        tags: "JARDIN",
       })
       .expect(200)
       .expect("Content-Type", /json/);
 
-    expect(res.body).toEqual(
-      expect.objectContaining({
-        _id: expect.any(String),
-        name: "John Doe",
-      })
-    );
-
-    expect(res.body).toBeObject();
-    expect(res.body._id).toBeString();
-    expect(res.body.name).toEqual("John Doe");
-    expect(res.body).toContainAllKeys(["name", "pictures", "notes", "_id", "__v"]);
+    expect(res.body.name).toEqual("Test");
+    expect(res.body.canton).toEqual("VD");
+    expect(res.body.tags).toEqual(["JARDIN"]);
   });
+});
+
+describe("DELETE /places", function () {
+  beforeEach(async function () {
+
+    let place;
+     place = await Promise.all([
+      Place.create({
+        name: "Test",
+        canton: "VD",
+        location: {
+          type: "Point",
+          coordinates: [120.0, 0.5],
+        },
+        tags: "JARDIN",
+      }),
+    ]);
+  });
+
+  test("should delete place", async function () {
+    const count = await Place.estimatedDocumentCount();
+    // console.log(count)
+    const token = await generateValidJwt(Place);
+    const res = await supertest(app)
+      .delete('/places/${place.id}')
+      .set('Authorization', `Bearer ${token}`)
+      .expect(204)
+
+      //check if the place is deleted in the database
+      const place2 = await Place.findById(Place.body._id);
+      expect(place2).toBeNull();
+
+
+    });
+      /* .then(async (res) => {
+        const newCount = await Place.estimatedDocumentCount();
+        //    console.log(newCount)
+        return newCount;
+      });
+       expect(res).toEqual(count-1); */
+  
 });
