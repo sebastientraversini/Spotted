@@ -2,10 +2,30 @@ import express from "express";
 
 import Place from '../models/place.js';
 import Note from '../models/note.js';
-import Notes from '../routes/notes.js'
-
 
 const router = express.Router();
+
+
+import { authenticate } from "./auth.js";
+
+
+let offset = 0;
+let limit = 20;
+
+
+
+// router.get("/:nom-:prenom")
+// req.params.nom // nom
+// router.get("/pictures?_start={}&limit={}".format(offset,limit), function (req, res, next) {
+//   /* res.send("Got a response from the Places route"); */
+  
+//    Place.find().then(function (doc) {
+//     res.render('index',{index:doc});
+
+//   })
+ 
+
+// });
 
 
 router.get("/", async function(req, res, next) {
@@ -50,14 +70,74 @@ router.get("/:id", function(req, res, next){
   res.send(req.place);
 })
 
-router.post('/',function (req, res, next){
+//chercher by id
+router.get("/:id", getPlaceId, function (req, res, next) {
+  res.send(req.place);
+});
+
+function getPlaceId(req, res, next) {
+  if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
+    Place.findById(req.params.id).exec(function (err, place) {
+      if (err) {
+        return next(err);
+      } else if (!place) {
+        return res.status(404).send("Il n'existe pas de place avec cet id")
+      }
+      req.place = place;
+      next();
+    });
+  } else {
+    return res.status(404).send("Il n'existe pas de place avec cet id")
+  }
+}
+
+//poster une nouvelle note pour une place existante
+router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
+
+  let item = {
+    author: req.userId,
+    stars:req.body.stars,
+    text:req.body.text,
+    place: req.place._id
+  }
+
+  let data = new Note(item);
+
+  data.save(function(err, savedNote) {
+    if (err) {
+      next(err);
+    }
+    else {
+      res.send(savedNote);
+    }
+});
+});
+
+//chercher toutes les notes liées à une place
+router.get("/:id/notes", getPlaceId, function (req, res, next) {
+
+  Note.find().where('place').equals(req.place._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("pas de notes crées pour cette place");
+      return;
+    }
+
+    res.send(result);
+
+  });
+
+});
+
+
+router.post('/',authenticate, function (req, res, next){
 let item = {
 
     name:req.body.name,
     canton:req.body.canton,
     location:req.body.location,
     pictures:req.body.pictures,
-    note:req.body.note,
+    notes:req.body.note,
     tags:req.body.tags,
   }
   let data = new Place(item);
@@ -111,6 +191,8 @@ if (err){
 res.send('Place bien deleted')
 })
 
+
+
 export default router;
 
 
@@ -155,7 +237,7 @@ export default router;
  */
 
 /**
- * @api {post} /places/:id add Place
+ * @api {post} /places/ add Place
  *  
  * @apiName AddPlace
  * @apiGroup Place
@@ -198,7 +280,7 @@ export default router;
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "votre place à été créé !"
+ *       "votre user à été créé !"
  *       
  *     }
  */

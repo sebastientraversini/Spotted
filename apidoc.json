@@ -1,0 +1,12 @@
+{
+    "name": "Spotted",
+    "version": "1.0.0",
+    "title": "Spotted",
+    "url" : "http://localhost:3000",
+    "apidoc": {
+        "header": {
+            "title": "Introduction",
+            "filename": "header.md"
+          }
+      }
+    }
