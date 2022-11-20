@@ -48,67 +48,16 @@ router.post('/', authenticate, upload.single('picture'), function (req, res, nex
 export default router;
 
 
-/**
- * @api {get} /pictures/:id Request a picture's information
- *  
- * @apiName GetPicture
- * @apiGroup Picture
- *
- * @apiParam {Number} id Picture id 
- *
- * @apiSuccess {String} author picture author
- * @apiSuccess {String} place  picture place
- * @apiSuccess {String} picture picture picture
- * 
- * 
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "auhor": "aefj4clcro5jd3",
- *       "place": "Chateau de Chillon",
- *       "picture": "[1,2,3]"
- * 
- * }
- *     
- * 
- */
+
 
 
 /* router.get("/hello", function (req, res, next) {
     res.send("hello");
-  }); */
+  }); 
+  */
+
+
+
+
 
   
-  /**
- * @api {post} /notes/ add a Note
- *  @apiPermission seulement un user connecté
- * @apiName Add a Note
- * @apiGroup Note
- * 
- * @apiParam {Objects[]} [pictures] User pictures
- * @apiParam {Strings[]} notes User notes
- * @apiParam {Strings[]} [tags] User tags
- * @apiParam {String} [text] Note text
- * 
- * @apiParamExample Example Body:
- *    {
- * "notes": "{
- *       stars : 3,
- *      text: tréjoli
- *  }",
- * "tags": "{chateau,
- *         Lac}"
- * }
- * 
- * @apiSuccess {Objects[]} [pictures] User pictures
- * @apiSuccess {Strings[]} notes User notes
- * @apiSuccess {Strings[]} [tags] User tags
- * @apiSuccess {String} [text] Note text
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre note à été créé !"
- *     }
- */
