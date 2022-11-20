@@ -232,6 +232,13 @@ router.patch("/:id/password", getUserId, authenticate, async function (req, res,
 export default router;
 
 
+
+
+
+
+// A partir d'ici, ce sont les commentaires pour ApiDoc
+
+
 /**
  * @api {get} https://spotted-rest-api.onrender.com/users/:id Request a user's information
  *  @apiPermission seulement un user peut voir ses propres données
@@ -338,6 +345,37 @@ export default router;
 
 
 
+
+/**
+ * @api {patch} https://spotted-rest-api.onrender.com/places/:id change a Place
+ * @apiPermission Une place peut être modifiée seulement par son user qui l'a créé
+ *  
+ * @apiName change a Place
+ * @apiGroup Place
+ * 
+ * @apiParam {String} id Place id
+ * @apiParam {String} name Place name
+ * @apiParam {String} canton Place canton
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "name": "chateau de Chillon",
+ *    "canton": "Vaud",
+ *   } 
+ * 
+ * @apiSuccess {String} name Place new name
+ * @apiSuccess {String} canton Place new canton
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre place à été modifié !"
+ *       
+ *     }
+ */
+
+
+
 /**
  * @api {delete} https://spotted-rest-api.onrender.com/users/:id delete a User
  *  
@@ -345,7 +383,6 @@ export default router;
  * @apiGroup User
  * 
  * @apiParam {String} id User id
- * 
  * 
  * @apiParamExample Example Body:
  *    {
@@ -368,12 +405,37 @@ export default router;
 
 
 /**
+ * @api {delete} https://spotted-rest-api.onrender.com/places/:id delete a Place
+ *  
+ * @apiName delete a Place
+ * @apiGroup Place
+ * 
+ * @apiParam {String} id Place id
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "id": "aed74a9c0fk3lofkvu4"
+ *   } 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre place à été delete !"
+ *       
+ *     }
+ */
+
+
+
+
+/**
  * @api {post} https://spotted-rest-api.onrender.com/places/:id/pictures add a Picture
  *  @apiPermission seulement les users connectés
  * @apiName Add a Picture
  * @apiGroup Picture
  * 
- * @apiParam {String} picture picture picture
+ * @apiParam {String} id Place id
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -387,11 +449,37 @@ export default router;
 
 
 /**
- * @api {get} https://spotted-rest-api.onrender.com/places/:id/pictures/:id Request a picture's information
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/pictures/:id Request a picture's information from a Place
  *  
- * @apiName GetPicture
+ * @apiName GetPictureFromPlace
  * @apiGroup Picture
  *
+ * @apiParam {Number} id Place id 
+ * @apiParam {Number} id Picture id 
+ *
+ * @apiSuccess {String} author picture's author
+ * @apiSuccess {String} place  picture's place
+ * @apiSuccess {String} picture[] picture's picture
+ * 
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "auhor": "aefj4clcro5jd3",
+ *       "place": "Chateau de Chillon",
+ *       "picture": "[1,2,3]"
+ * }
+ *
+ * 
+ * 
+ * /**
+ * @api {get} https://spotted-rest-api.onrender.com/users/:id/pictures/:id Request a picture's information from a User
+ *  
+ * @apiName GetPictureFromUser
+ * @apiGroup Picture
+ *
+ * @apiParam {Number} id User id 
  * @apiParam {Number} id Picture id 
  *
  * @apiSuccess {String} author picture's author
@@ -408,6 +496,43 @@ export default router;
  *       "picture": "[1,2,3]"
  * }
  */
+
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/tags Request all tags from a Place
+ *  
+ * @apiName GetTags
+ * @apiGroup Place
+ *
+ * @apiParam {Number} id Place id 
+ *
+ * @apiSuccess {String[]} tags Place tags
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "tags": "[tréjoli,trébo]"
+ * }
+ */ 
+
+
+/**
+ * @api {post} https://spotted-rest-api.onrender.com/places/:id/tags Add a tag
+ *  
+ * @apiName PostTag
+ * @apiGroup Place
+ *
+ * @apiParam {Number} id Place id 
+ *
+ * @apiSuccess {String[]} tag Place tag
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "Votre tag à été ajouté"
+ * }
+ */ 
+
 
 
 /**
@@ -463,7 +588,7 @@ export default router;
 
 
 /**
- * @api {get} https://spotted-rest-api.onrender.com/notes/:id Request a note's information
+ * @api {get} https://spotted-rest-api.onrender.com/notes/:id Request a note's information directly
  *  
  * @apiName GetNoteDirectly
  * @apiGroup Note
@@ -631,22 +756,78 @@ export default router;
 
 
 /**
- * @api {get} https://spotted-rest-api.onrender.com/places/:tag Request all pictures that contains this tag
+ * @api {get} https://spotted-rest-api.onrender.com/places/:tag Request all places that contains this tag
  *  
- * @apiName GetPicturesFromAUser
- * @apiGroup Picture
+ * @apiName GetAllPlacesTag
+ * @apiGroup Place
  *
- * @apiParam {String} id User id 
+ * @apiParam {String} Tag Tag name 
  *
- * @apiSuccess {Strings[]} pictures Place pictures
+ * @apiSuccess {Strings[]} places Place places
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "pictures": "[1,2,3,4,5]"
+ *       "places": "[dasf4fedsf,
+ *                   4df444f2dff4,
+ *                   2pl5kll5]"
  *     }
  */
 
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/score Request the total score for a place
+ *  
+ * @apiName GetScoreForPlace
+ * @apiGroup Place
+ *
+ * @apiParam {String} Score Place Score 
+ *
+ * @apiSuccess {Strings[]} Score Place Score 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "places": "4.1"
+ *     }
+ */
+
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/pictures Request all pictures from a place
+ *  
+ * @apiName GetPicturesFromPlace
+ * @apiGroup Picture
+ *
+ * @apiParam {String} id Place id 
+ *
+ * @apiSuccess {Strings[]} pictures Place pictures 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "pictures": "[e3frg5434g,
+ *                     r43t34t34t,
+ *                     gh76u67h]"
+ *     }
+ */
+
+
+
+/**
+ * @api {post} https://spotted-rest-api.onrender.com/places/:id/pictures Add a picture for a place
+ *  
+ * @apiName PostPicture
+ * @apiGroup Picture
+ *
+ * @apiParam {String} picture Place picture 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "Votre picture a bien été ajoutée"
+ *     }
+ */
 
 
 /**
