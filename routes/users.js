@@ -235,7 +235,7 @@ export default router;
 
 
 /**
- * @api {get} /users/:id Request a user's information
+ * @api {get} https://spotted-rest-api.onrender.com/users/:id Request a user's information
  *  @apiPermission seulement un user peut voir ses propres données
  * 
  * @apiName Get a User
@@ -281,7 +281,7 @@ export default router;
 
 
 /**
- * @api {post} /users/ add a User
+ * @api {post} https://spotted-rest-api.onrender.com/users/ add a User
  *  
  * @apiName Add a User
  * @apiGroup User
@@ -310,7 +310,7 @@ export default router;
 
 
 /**
- * @api {patch} /users/:id change a User
+ * @api {patch} https://spotted-rest-api.onrender.com/users/:id change a User
  * @apiPermission seulement un user peut modifier ses propres données
  *  
  * @apiName change a User
@@ -341,7 +341,7 @@ export default router;
 
 
 /**
- * @api {delete} /users/:id delete a User
+ * @api {delete} https://spotted-rest-api.onrender.com/users/:id delete a User
  *  
  * @apiName delete a User
  * @apiGroup User
@@ -370,7 +370,7 @@ export default router;
 
 
 /**
- * @api {post} /places/:id/pictures add a Picture
+ * @api {post} https://spotted-rest-api.onrender.com/places/:id/pictures add a Picture
  *  @apiPermission seulement les users connectés
  * @apiName Add a Picture
  * @apiGroup Picture
@@ -389,7 +389,7 @@ export default router;
 
 
 /**
- * @api {get} places/:id/pictures/:id Request a picture's information
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/pictures/:id Request a picture's information
  *  
  * @apiName GetPicture
  * @apiGroup Picture
@@ -414,7 +414,7 @@ export default router;
 
 
 /**
- * @api {get} users/:id/notes/:id Request a note's information
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/notes/:id Request a note's information
  *  
  * @apiName GetNotes
  * @apiGroup Note
@@ -441,13 +441,13 @@ export default router;
 
 
     /**
- * @api {post} places/:id/notes/ add a Note
+ * @api {post} https://spotted-rest-api.onrender.com/places/:id/notes/ add a Note
  *  @apiPermission seulement un user connecté
  * @apiName Add a Note
  * @apiGroup Note
  * 
- * @apiParam {Objects[]} stars Note stars
- * @apiParam {Strings[]} text Note text
+ * @apiParam {Objects} stars Note stars
+ * @apiParam {Strings} text Note text
  * 
  * @apiParamExample Example Body:
  *    {
@@ -467,7 +467,7 @@ export default router;
 
 
     /**
- * @api {post} /places/ add a Place
+ * @api {post} https://spotted-rest-api.onrender.com/places/ add a Place
  *   @apiPermission seulement les users connectés
  * @apiName Add a Place
  * @apiGroup Place
@@ -498,7 +498,7 @@ export default router;
 
 
     /**
- * @api {get} /places/:id Request a place's information
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id Request a place's information
  *  
  * @apiName Get a Place
  * @apiGroup Place
@@ -534,4 +534,33 @@ export default router;
  * "tags": "{chateau,
  *           Lac}"
  *     }
+ */
+
+
+
+
+
+        /**
+ * @api {connexion} https://spotted-rest-api.onrender.com/login Connect with a user
+ * @apiDescription Pour se connecter, il faut utiliser les paramètres d'un utilisateur. Son nom, nom de famille et son mot de passe. Quasiment toutes les opérations suivantes requirent d'être connecté.
+ * @apiName Connexion
+ * @apiGroup Connexion
+ *
+ * 
+ * @apiParam {String} name User name 
+ * @apiParam {String} surname User surname 
+ * @apiParam {String} password User password 
+ *
+ * @apiSuccess {String} name User name 
+ * @apiSuccess {String} surname User surname 
+ * @apiSuccess {String} password User password 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "name": "Sébastien",
+ *       "surname": "Traversini",
+ *        "password": "password1"
+ *     }
+ * 
  */
