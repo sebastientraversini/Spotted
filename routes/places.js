@@ -99,15 +99,15 @@ router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
       //update la place
       Place.findOneAndUpdate(
         { _id: req.place._id },
-        { name: req.body.name, canton : req.body.canton},
-         function (err, user) {
-        if (err) {
-          next(err);
-          return;
-        }
-        console.log(user)
-        res.send("tu as modifié la place, bravo !")
-      })
+        { name: req.body.name, canton: req.body.canton },
+        function (err, user) {
+          if (err) {
+            next(err);
+            return;
+          }
+          console.log(user)
+          res.send("tu as modifié la place, bravo !")
+        })
     }
   });
 
@@ -162,7 +162,7 @@ router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
 });
 
 
-//chercher toutes les notes liées à une place
+//chercher toutes les notes détaillées liées à une place
 router.get("/:id/notes", getPlaceId, function (req, res, next) {
 
   Note.find().where('place').equals(req.place._id).exec(function (err, result) {
@@ -178,25 +178,54 @@ router.get("/:id/notes", getPlaceId, function (req, res, next) {
 
 });
 
+//chercher la note globale (1-5) d'une place
+router.get("/:id/score", getPlaceId, function (req, res, next) {
+
+  Note.find().where('place').equals(req.place._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("nobody scored this place");
+      return;
+    }
+
+    let sum = 0;
+    let count = 0;
+    result.forEach((el) => {
+      sum += el.stars;
+      count++;
+    })
+    let globaleScore = {
+      "score":
+        sum / count,
+      "number review": count
+    }
+    console.log(globaleScore)
+
+    res.send(globaleScore);
+
+  });
+
+});
+
 //poster une nouvelle photo pour une place existante
-router.post('/:id/pictures',getPlaceId, authenticate, upload.single('picture'), function (req, res, next) {
+router.post('/:id/pictures', getPlaceId, authenticate, upload.single('picture'), function (req, res, next) {
   /*     const bufferImage = Buffer.from(req.file); */
   let item = {
-      author: req.userId,
-      place: req.place._id,  // Une place existe avant la photo, l'user choisit dans l'app la place et nous on envoie son id en body
-      picture: req.file.buffer  /* bufferImage */
+    author: req.userId,
+    place: req.place._id,  // Une place existe avant la photo, l'user choisit dans l'app la place et nous on envoie son id en body
+    picture: req.file.buffer  /* bufferImage */
   }
 
   let data = new Picture(item);
 
 
   data.save(function (err, data) {
-      if (err) {
-          next(err)
-          return;
-      };
+    if (err) {
+      next(err)
+      return;
+    };
 
-      res.send(data)
+    res.send(data)
   });
 
 })
