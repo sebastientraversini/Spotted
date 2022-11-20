@@ -89,25 +89,6 @@ router.get("/:id/pictures", getUserId, function (req, res, next) {
 
   });
 
-  /* avec aggregate 
-   Picture.aggregate([{
-      $match: { author: req.user._id }
-    },
-    {
-      $lookup: {
-        from: 'users',
-        localField: 'author',
-        foreignField: '_id',
-        as: 'licorne'
-      }
-    },
-    { $unwind: '$licorne' }], (err, results) => {
-      if (err) console.log(err)
-      console.log(results)
-      res.send(results)
-    })
-   */
-
 });
 
 //chercher notes d'un user
@@ -125,7 +106,6 @@ router.get("/:id/notes", getUserId, function (req, res, next) {
   });
 
 });
-
 
 
 //chercher places visitées d'un user (en passant par Notes)
@@ -174,15 +154,6 @@ router.get("/:id/visitedPlaces", getUserId, function (req, res, next) {
     })
     res.send(monArrayFinal)
 
-    //map de l'array pour transformer l'objectId en String pour pouvoir le filtrer
-    /*     const mappedFilterArray = visitedPlaces.map(place => place.toString());
-    
-        let uniqueVisitedPlaces = Array.from(new Set(mappedFilterArray));
-    
-        console.log(uniqueVisitedPlaces)
-    
-        res.send(uniqueVisitedPlaces); */
-
   });
 
 });
@@ -192,12 +163,11 @@ router.get("/:id/visitedPlaces", getUserId, function (req, res, next) {
 router.delete("/:id", getUserId, authenticate, function (req, res, next) {
   //vérifier si user valide
   //vérifier si user à supprimer est = à l'utilisateur authentifié
-  /*   res.send([req.user._id,req.userId]) */
   //req.user._id vient de getUserId et req.userId est l'id du user authentifié
   if (!req.user._id.equals(req.userId)) {
     return res.status('403').send("You can't delete another user")
   }
-  /*   res.send(req.user._id) */
+
   User.findOneAndDelete({ _id: req.user._id }, function (err, user) {
     if (err) {
       next(err);
@@ -207,6 +177,7 @@ router.delete("/:id", getUserId, authenticate, function (req, res, next) {
   })
 
 });
+
 
 //modifier user
 router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
@@ -225,7 +196,6 @@ router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
   res.send("Congrats, update has been made");
 
 });
-
 
 
 //modifier password user --> seulement le nôtre + si on se souvient du last mot de passe
@@ -258,7 +228,6 @@ router.patch("/:id/password", getUserId, authenticate, async function (req, res,
   else { res.status(401).send("Last password is wrong. Please enter your true password") }
 
 });
-
 
 export default router;
 

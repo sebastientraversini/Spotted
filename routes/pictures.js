@@ -20,8 +20,6 @@ router.get("/", function (req, res, next) {
       }); 
 });
 
-//mettre npm multer et installer pour que cela fonctionne en renvoyant req.file
-
 //poster une photo
 router.post('/', authenticate, upload.single('picture'), function (req, res, next) {
     /*     const bufferImage = Buffer.from(req.file); */
@@ -47,14 +45,6 @@ router.post('/', authenticate, upload.single('picture'), function (req, res, nex
 
 export default router;
 
-
-
-
-
-/* router.get("/hello", function (req, res, next) {
-    res.send("hello");
-  }); 
-  */
 
 
 

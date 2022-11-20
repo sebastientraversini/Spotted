@@ -15,25 +15,11 @@ import { authenticate } from "./auth.js";
 let offset = 0;
 let limit = 20;
 
-// router.get("/:nom-:prenom")
-// req.params.nom // nom
-// router.get("/pictures?_start={}&limit={}".format(offset,limit), function (req, res, next) {
-//   /* res.send("Got a response from the Places route"); */
-
-//    Place.find().then(function (doc) {
-//     res.render('index',{index:doc});
-
-//   })
-// });
 
 //obtenir les places avec une limite
 router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
 
-  /*   if(req.query.tag && req.query.canton){
-     return res.send([req.query.tag, req.query.canton])
-    }
-   */
   //filtre des places par tag
   if (req.query.tag) {
     let arrayPlacesWithThisTag = [];
@@ -47,21 +33,19 @@ router.get("/", async function (req, res, next) {
         if (textFormatToCompare(t) === tagSearched) {
           tagInThisPlace = true;
         }
-        /*         console.log(t) */
       })
+
       //si tag est présent dans cette place, on ajoute la place dans tableau des places contenant ce tag
       if (tagInThisPlace) {
         arrayPlacesWithThisTag.push(el);
       }
-
     })
 
     if (arrayPlacesWithThisTag.length == 0) {
       return res.send("no place contains this tag")
     }
 
-    //si canton est aussi en query --> les filtres
-
+    //si canton est aussi en query --> on mix les filtres
     if (req.query.canton) {
       let arrayPlacesWithTagAndCanton = [];
       arrayPlacesWithThisTag.forEach((el) => {
@@ -78,10 +62,9 @@ router.get("/", async function (req, res, next) {
     }
 
     return res.send(arrayPlacesWithThisTag)
-
   }
 
-  //filtre par canton
+  //filtre par canton uniquement
   if (req.query.canton) {
     let canton = req.query.canton;
     console.log(canton);
@@ -97,48 +80,17 @@ router.get("/", async function (req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 
-  let arrayPlacesWithThisTag = [];
-  console.log(req.query.tag)
-
 
 })
 
 
 
-/* router.get("/:id/notes", function (req, res, next) {
-
-  console.log("on est arrivés dans la route");
-
-
-  test();
-
-  async function test() {
-    req.place.populate(
-      {
-        path: "Notes",
-        populate: { path: "Note" }
-      },
-
-      await function (err) {
-        let arrayNotes = [];
-        req.place.notes.forEach((n) => {
-          arrayPlaces.push(n.place);
-        })
-        res.send(arrayNotes);
-      })
-
-  }
-
-
-}) */
-
-
-//chercher by id
+//chercher place by id
 router.get("/:id", getPlaceId, function (req, res, next) {
   res.send(req.place);
 });
 
-//middleware id
+//middleware id place
 function getPlaceId(req, res, next) {
   if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
     Place.findById(req.params.id).exec(function (err, place) {

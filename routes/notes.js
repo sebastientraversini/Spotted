@@ -7,8 +7,6 @@ import { authenticate } from "./auth.js";
 
 const router = express.Router();
 
-
-
 router.get("/", function (req, res, next) {
   Note.find().exec(function (err, users) {
     if (err) {
