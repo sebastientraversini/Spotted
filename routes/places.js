@@ -30,6 +30,10 @@ let limit = 20;
 router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
 
+  /*   if(req.query.tag && req.query.canton){
+     return res.send([req.query.tag, req.query.canton])
+    }
+   */
   //filtre des places par tag
   if (req.query.tag) {
     let arrayPlacesWithThisTag = [];
@@ -43,7 +47,7 @@ router.get("/", async function (req, res, next) {
         if (textFormatToCompare(t) === tagSearched) {
           tagInThisPlace = true;
         }
-        console.log(t)
+        /*         console.log(t) */
       })
       //si tag est présent dans cette place, on ajoute la place dans tableau des places contenant ce tag
       if (tagInThisPlace) {
@@ -55,6 +59,24 @@ router.get("/", async function (req, res, next) {
     if (arrayPlacesWithThisTag.length == 0) {
       return res.send("no place contains this tag")
     }
+
+    //si canton est aussi en query --> les filtres
+
+    if (req.query.canton) {
+      let arrayPlacesWithTagAndCanton = [];
+      arrayPlacesWithThisTag.forEach((el) => {
+        if (textFormatToCompare(req.query.canton) === textFormatToCompare(el.canton)) {
+          arrayPlacesWithTagAndCanton.push(el);
+        }
+        console.log(el)
+      })
+      if (arrayPlacesWithTagAndCanton.length == 0) {
+        return res.send("no place contains this tag in this canton")
+      }
+      return res.send(arrayPlacesWithTagAndCanton)
+
+    }
+
     return res.send(arrayPlacesWithThisTag)
 
   }
