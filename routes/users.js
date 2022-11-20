@@ -251,7 +251,7 @@ export default router;
 /**
  * @api {get} /users/:id Request a user's information
  *  
- * @apiName GetUser
+ * @apiName Get a User
  * @apiGroup User
  *
  * @apiParam {Number} id User id 
@@ -282,16 +282,16 @@ export default router;
  */
 
 /**
- * @api {post} /users/ add User
+ * @api {post} /users/ add a User
  *  
- * @apiName AddUser
+ * @apiName Add a User
  * @apiGroup User
  * 
  * @apiParam {String} firstname User firstname, mandatory
  * @apiParam {String} surname User surname, mandatory
  * @apiParam {String} password User password, mandatory
- * @apiParam {Objects[]} pictures  User pictures, not mandatory
- * @apiParam {Strings[]} notes  User notes, not mandatory
+ * @apiParam {Objects[]} [pictures]  User pictures
+ * @apiParam {Strings[]} [notes]  User notes
  * 
  * 
  * @apiParamExample Example Body:
@@ -310,6 +310,60 @@ export default router;
  *     HTTP/1.1 200 OK
  *     {
  *       "votre user à été créé !"
+ *       
+ *     }
+ */
+
+/**
+ * @api {patch} /users/:id change a User
+ * @apiPermission seulement un user peut modifier ses propres données
+ *  
+ * @apiName change a User
+ * @apiGroup User
+ * 
+ * @apiParam {String} firstname User firstname
+ * @apiParam {String} surname User surname
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "firstname": "Florian",
+ *    "surname": "Ouakel",
+ *   } 
+ * 
+ * 
+ * @apiSuccess {String} firstName User name
+ * @apiSuccess {String} surname  User surname
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre user à été modifié !"
+ *       
+ *     }
+ */
+
+/**
+ * @api {delete} /users/:id delete a User
+ *  
+ * @apiName delete a User
+ * @apiGroup User
+ * 
+ * @apiParam {String} id User id
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "id": "aed74a9c0fk3lofkvu4"
+ *   } 
+ * 
+ * 
+ * @apiSuccess {String} id User id
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre user à été delete !"
  *       
  *     }
  */

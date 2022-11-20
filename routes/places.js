@@ -308,7 +308,7 @@ export default router;
 /**
  * @api {get} /places/:id Request a place's information
  *  
- * @apiName GetPlace
+ * @apiName Get a Place
  * @apiGroup Place
  *
  * @apiParam {Number} id Place id 
@@ -345,9 +345,9 @@ export default router;
  */
 
 /**
- * @api {post} /places/ add Place
+ * @api {post} /places/ add a Place
  *  
- * @apiName AddPlace
+ * @apiName Add a Place
  * @apiGroup Place
  * 
  * @apiParam {String} name Place name, mandatory
@@ -381,14 +381,14 @@ export default router;
  * 
  * 
  * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
+ * @apiSuccess {String} name Place name
+ * @apiSuccess {String} canton User canton
+ * @apiSuccess {String} location Place location
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "votre user à été créé !"
+ *       "votre place à été créé !"
  *       
  *     }
  */
