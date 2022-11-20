@@ -10,11 +10,8 @@ const upload = multer();
 
 import { authenticate } from "./auth.js";
 
-
 let offset = 0;
 let limit = 20;
-
-
 
 // router.get("/:nom-:prenom")
 // req.params.nom // nom
@@ -25,8 +22,6 @@ let limit = 20;
 //     res.render('index',{index:doc});
 
 //   })
-
-
 // });
 
 //obtenir les places avec une limite
@@ -58,8 +53,26 @@ function getPlaceId(req, res, next) {
   }
 }
 
-//créer une place
-router.post('/', authenticate, function (req, res, next) {
+//créer une place --> check if this place already exists in this canton
+router.post('/', authenticate, async function (req, res, next) {
+
+  let newPlaceWished = req.body.name.trim().toUpperCase();
+  let cantonOfNewPlaceWished = req.body.canton.trim().toUpperCase();
+
+  let alreadyCreated = false;
+  const places = await Place.find({}).limit(limit).exec()
+  places.forEach((el) => {
+    let existingPlace = el.name.trim().toUpperCase();
+    let cantonOfExistingPlace = el.canton.trim().toUpperCase();
+    if (newPlaceWished === existingPlace && cantonOfExistingPlace === cantonOfNewPlaceWished) {
+      alreadyCreated = true;
+    };
+  })
+
+  if (alreadyCreated) {
+    return res.status(400).send("This place already exists")
+  }
+
   let item = {
     creator: req.userId,
     name: req.body.name,
@@ -208,15 +221,15 @@ router.get("/:id/score", getPlaceId, function (req, res, next) {
 });
 
 //chercher les tags liés à une place
-router.get("/:id/tags", authenticate, getPlaceId, function (req, res, next){
-res.send(req.place.tags)
+router.get("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
+  res.send(req.place.tags)
 })
 
 //ajouter un tag à une place s'il n'existe pas déjà
 
 router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
 
-  let newTag = req.body.tag;
+  let newTag = req.body.tag.trim().toUpperCase();
   console.log(newTag)
 
 
@@ -225,7 +238,9 @@ router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
   let newArrayTags = [];
   arrayExistingTags.forEach((el) => {
     newArrayTags.push(el);
-    if (el === req.body.tag) {
+
+    if (el.trim().toUpperCase() === newTag) {
+      console.log(el.trim().toUpperCase(), newTag)
       alreadyInArray = true;
     }
   })
@@ -233,7 +248,7 @@ router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
   if (!alreadyInArray) {
     //push le tag dans le nouveau tableau de tags
     newArrayTags.push(req.body.tag)
-/*     res.send(newArrayTags) */
+    /*     res.send(newArrayTags) */
     //patch le tableau de tags 
 
     Place.findById(req.place._id, function (err, docs) {
@@ -243,7 +258,7 @@ router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
       else {
         Place.findOneAndUpdate(
           { _id: req.place._id },
-          { tags : newArrayTags },
+          { tags: newArrayTags },
           function (err, user) {
             if (err) {
               next(err);
