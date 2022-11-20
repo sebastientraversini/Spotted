@@ -3,12 +3,13 @@ import User from '../models/user.js';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import * as config from "../config.js"
+import { textFormat } from "../spec/utils.js";
 
 const router = express.Router();
 
 router.post('/', async (req, res, next) => {
     try {
-        const user = await User.findOne({ name: req.body.name });
+        const user = await User.findOne({ name: textFormat(req.body.name) });
         if (!user) {
             res.status(401).send("Bad login : t'es pas dans la database askip");
         }

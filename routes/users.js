@@ -228,8 +228,39 @@ router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
 
 
 
-export default router;
+//modifier password user --> seulement le nôtre + si on se souvient du last mot de passe
+router.patch("/:id/password", getUserId, authenticate, async function (req, res, next) {
 
+  if (!req.user._id.equals(req.userId)) {
+    return res.status('403').send("You can't update password from others users")
+  }
+
+  //on prend le password envoyé dans le body (tentative de connexion)
+  const lastPassword = req.body.lastPassword;
+  let newPassword = req.body.newPassword;
+  //on prend le password Hashé de la database de cet user
+  const passwordHash = req.user.passwordHash;
+  //on les compare
+  const valid = await bcrypt.compare(lastPassword, passwordHash);
+  if (valid) {
+    const costFactor = 10;
+    //on hash le nouveau password + le sable
+    bcrypt.hash(newPassword, costFactor, async function (err, hashedPassword) {
+      if (err) {
+        return next(err);
+      }
+      //on rentre le password hashé comme nouveau mdp de l'user
+      const passwordUpdated = await User.findOneAndUpdate({ _id: req.user._id }, { passwordHash: hashedPassword });
+      res.send("Congrats, update has been made");
+    });
+
+  }
+  else { res.status(401).send("Last password is wrong. Please enter your true password") }
+
+});
+
+
+export default router;
 
 
 /**
@@ -438,98 +469,98 @@ export default router;
 
 
 
-    /**
- * @api {post} places/:id/notes/ add a Note
- *  @apiPermission seulement un user connecté
- * @apiName Add a Note
- * @apiGroup Note
- * 
- * @apiParam {Objects[]} stars Note stars
- * @apiParam {Strings[]} text Note text
- * 
- * @apiParamExample Example Body:
- *    {
- *       "stars" : "3",
- *      "text": "tréjoli"
- *  }
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre note à été créé !"
- *     }
- */
+/**
+* @api {post} places/:id/notes/ add a Note
+*  @apiPermission seulement un user connecté
+* @apiName Add a Note
+* @apiGroup Note
+* 
+* @apiParam {Objects[]} stars Note stars
+* @apiParam {Strings[]} text Note text
+* 
+* @apiParamExample Example Body:
+*    {
+*       "stars" : "3",
+*      "text": "tréjoli"
+*  }
+* 
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "votre note à été créé !"
+*     }
+*/
 
 
 
 
 
-    /**
- * @api {post} /places/ add a Place
- *   @apiPermission seulement les users connectés
- * @apiName Add a Place
- * @apiGroup Place
- * 
- * @apiParam {String} name Place name
- * @apiParam {String} canton User canton
- * @apiParam {String} location Place location
- * 
- * @apiParamExample Example Body:
- *    {
- *     "name": "Chateau de Chillon",
- *    "canton": "Vaud",
- *   "location": "{
- *        1324324234.23,
- *        234234234234.76556
- *        }"
- * }
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre place à été créé !"
- *       
- *     }
- */
+/**
+* @api {post} /places/ add a Place
+*   @apiPermission seulement les users connectés
+* @apiName Add a Place
+* @apiGroup Place
+* 
+* @apiParam {String} name Place name
+* @apiParam {String} canton User canton
+* @apiParam {String} location Place location
+* 
+* @apiParamExample Example Body:
+*    {
+*     "name": "Chateau de Chillon",
+*    "canton": "Vaud",
+*   "location": "{
+*        1324324234.23,
+*        234234234234.76556
+*        }"
+* }
+* 
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "votre place à été créé !"
+*       
+*     }
+*/
 
 
 
 
-    /**
- * @api {get} /places/:id Request a place's information
- *  
- * @apiName Get a Place
- * @apiGroup Place
- *
- * @apiParam {Number} id Place id 
- * @apiParam {String} name Place name 
- *
- * @apiSuccess {String} name Place name
- * @apiSuccess {String} canton  Place canton
- * @apiSuccess {Objects[]} location  Place location
- * @apiSuccess {Strings[]} pictures Place pictures
- * @apiSuccess {Strings[]} notes Place notes
- * @apiSuccess {String[]} tags Place tags
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "name": "chateau de Chillon",
- *       "canton": "Vaud",
- *        "location": "{
- *        1324324234.23,
- *        234234234234.76556
- *        }",
- * "pictures": "{
- *        1,
- *        2,
- *        3
- *          }",
- * "notes": "{
- *        [stars : 3,text: tréjoli],
- * [stars : 2, text: trébo]
- *          }",
- * "tags": "{chateau,
- *           Lac}"
- *     }
- */
+/**
+* @api {get} /places/:id Request a place's information
+*  
+* @apiName Get a Place
+* @apiGroup Place
+*
+* @apiParam {Number} id Place id 
+* @apiParam {String} name Place name 
+*
+* @apiSuccess {String} name Place name
+* @apiSuccess {String} canton  Place canton
+* @apiSuccess {Objects[]} location  Place location
+* @apiSuccess {Strings[]} pictures Place pictures
+* @apiSuccess {Strings[]} notes Place notes
+* @apiSuccess {String[]} tags Place tags
+* 
+* @apiSuccessExample Success-Response:
+*     HTTP/1.1 200 OK
+*     {
+*       "name": "chateau de Chillon",
+*       "canton": "Vaud",
+*        "location": "{
+*        1324324234.23,
+*        234234234234.76556
+*        }",
+* "pictures": "{
+*        1,
+*        2,
+*        3
+*          }",
+* "notes": "{
+*        [stars : 3,text: tréjoli],
+* [stars : 2, text: trébo]
+*          }",
+* "tags": "{chateau,
+*           Lac}"
+*     }
+*/
