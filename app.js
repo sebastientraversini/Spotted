@@ -7,14 +7,32 @@ import placesRouter from "./routes/places.js";
 import notesRouter from "./routes/notes.js";
 import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
-
-
 import mongoose from 'mongoose';
-mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/spotted');
-/* mongoose.connect('mongodb://localhost/express-api'); */
-const app = express();
 
+
+mongoose.Promise = Promise;
+/* mongoose.connect('mongodb://localhost/spotted'); */
+/* mongoose.connect('mongodb://localhost/express-api'); */
+
+const server ='127.0.0.1'
+const database = 'spotted';
+
+
+
+const connectDB = async () => {
+
+  try { await mongoose.connect(`mongodb://${server}/${database}`); 
+console.log("connected !");
+} 
+ 
+  catch (err) { console.log('Failed to conenct',err)}
+}
+
+connectDB();
+
+
+
+const app = express();
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
