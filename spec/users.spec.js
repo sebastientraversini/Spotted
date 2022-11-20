@@ -88,3 +88,31 @@ describe('DELETE /users/:name', function (){
   });
 
 })
+
+describe('PATCH /users/:name', function (){
+
+  let johnDoe;
+  let janeDoe;
+
+  beforeEach(async function() {
+    // Create 2 users before retrieving the list.
+    [ johnDoe, janeDoe ] = await Promise.all([
+      User.create({ name:'John Doe',surname:'test', passwordHash:'test' }),
+      User.create({ name:'Jane Doe', surname:'test', passwordHash:'test' })
+    ]);
+  });
+
+  test("should modify the user's name and surname", async function() {
+    const token = await generateValidJwt(johnDoe);
+    const res = await supertest(app)
+      .patch(`/users/${johnDoe.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: "Test",
+        surname: "Test1234"
+      })
+      .expect(200)
+      .expect('Content-Type', /text/)
+});
+
+})

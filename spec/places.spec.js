@@ -68,6 +68,7 @@ describe("DELETE /places",function () {
     place = await Promise.all([
      Place.create({
        name: "Test",
+       creator: johnDoe.id,
        canton: "VD",
        location: {
          type: "Point",
