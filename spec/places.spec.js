@@ -82,13 +82,12 @@ describe("DELETE /places",function () {
     
 
     test("should delete place", async function () {
-      const count = await Place.estimatedDocumentCount();
       // console.log(count)
       const token = await generateValidJwt(johnDoe);
       const res = await supertest(app)
         .delete(`/places/${place.id}`)
         .set('Authorization', `Bearer ${token}`)
-        .expect(204)
+        .expect(200)
   
         //check if the place is deleted in the database
         const place2 = await Place.findById(Place.body._id);
