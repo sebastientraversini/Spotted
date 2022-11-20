@@ -145,15 +145,15 @@ export default router;
 
 
   /**
- * @api {post} /notes/ add Note
+ * @api {post} /notes/ add a Note
  *  
- * @apiName AddNote
+ * @apiName Add a Note
  * @apiGroup Note
  * 
- * @apiParam {Objects[]} pictures User pictures, not mandatory
- * @apiParam {Strings[]} notes User notes, mandatory
- * @apiParam {Strings[]} tags User tags, not mandatory
- * @apiParam {String} text Note text, not mandatory
+ * @apiParam {Objects[]} [pictures] User pictures
+ * @apiParam {Strings[]} notes User notes
+ * @apiParam {Strings[]} [tags] User tags
+ * @apiParam {String} [text] Note text
  * 
  * @apiParamExample Example Body:
  *    {
@@ -165,10 +165,10 @@ export default router;
  *         Lac}"
  * }
  * 
- * @apiSuccess {Objects[]} pictures User pictures, not mandatory
- * @apiSuccess {Strings[]} notes User notes, mandatory
- * @apiSuccess {Strings[]} tags User tags, not mandatory
- * @apiSuccess {String} text Note text, not mandatory
+ * @apiSuccess {Objects[]} [pictures] User pictures
+ * @apiSuccess {Strings[]} notes User notes
+ * @apiSuccess {Strings[]} [tags] User tags
+ * @apiSuccess {String} [text] Note text
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
@@ -176,3 +176,5 @@ export default router;
  *       "votre note à été créé !"
  *     }
  */
+
+   
