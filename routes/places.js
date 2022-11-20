@@ -84,13 +84,14 @@ router.get("/tag", async function (req, res, next) {
 
 })
 
-router.get("/:id/notes", function (req, res, next) {
+
+
+
+/* router.get("/:id/notes", function (req, res, next) {
 
   console.log("on est arrivés dans la route");
 
-  /* if (req.place.notes.length == 0) {
-    res.send("Aucunes notes");
-  } */
+
   test();
 
   async function test() {
@@ -111,12 +112,9 @@ router.get("/:id/notes", function (req, res, next) {
   }
 
 
-})
+}) */
 
-router.get("/:id", function (req, res, next) {
-  res.send(req.place);
 
-})
 
 //chercher by id
 router.get("/:id", getPlaceId, function (req, res, next) {
