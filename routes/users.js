@@ -36,8 +36,8 @@ router.post("/", function (req, res, next) {
     }
     // Create a new document from the JSON in the request body
     const newUser = new User({
-      name : textFormat(req.body.name),
-      surname : textFormat(req.body.surname)
+      name: textFormat(req.body.name),
+      surname: textFormat(req.body.surname)
     });
     //on rentre le password hashé comme nouveau mdp de l'user
     newUser.passwordHash = hashedPassword;
@@ -208,9 +208,8 @@ router.delete("/:id", getUserId, authenticate, function (req, res, next) {
 
 });
 
-
+//modifier user
 router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
-  console.log(req.body.name)
 
   const filter = { _id: req.user._id };
   const update = {
@@ -224,7 +223,6 @@ router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
 
   const userUpdated = await User.findOneAndUpdate(filter, update);
   res.send("Congrats, update has been made");
-
 
 });
 
