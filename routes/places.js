@@ -31,9 +31,6 @@ router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
-<<<<<<< Updated upstream
-=======
-
   
 
 })
@@ -90,7 +87,7 @@ test();
 
 router.get("/:id", function(req, res, next){
   res.send(req.place);
->>>>>>> Stashed changes
+
 })
 
 //chercher by id
