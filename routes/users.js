@@ -276,28 +276,9 @@ export default router;
  *     }
  */
 
-/**
- * @api {get} /users/:id/pictures Request a user's pictures
- *  @apiPermission seulement un user peut voir ses propres photos
- * 
- * @apiName Get a User's pictures
- * @apiGroup User
- *
- * @apiParam {Number} id User id 
- *
- * @apiSuccess {String} author picture author
- * @apiSuccess {String} place  picture place
- * @apiSuccess {String} picture picture picture
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "auhor": "aefj4clcro5jd3",
- *       "place": "Chateau de Chillon",
- *       "picture": "[1,2,3]"
- * 
- * }
- */
+
+
+
 
 /**
  * @api {post} /users/ add a User
@@ -305,12 +286,9 @@ export default router;
  * @apiName Add a User
  * @apiGroup User
  * 
- * @apiParam {String} firstname User firstname, mandatory
- * @apiParam {String} surname User surname, mandatory
- * @apiParam {String} password User password, mandatory
- * @apiParam {Objects[]} [pictures]  User pictures
- * @apiParam {Strings[]} [notes]  User notes
- * 
+ * @apiParam {String} firstname User firstname
+ * @apiParam {String} surname User surname
+ * @apiParam {String} password User password
  * 
  * @apiParamExample Example Body:
  *    {
@@ -319,11 +297,6 @@ export default router;
  *   "password": "123456"
  *   } 
  * 
- * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
- * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
@@ -331,38 +304,9 @@ export default router;
  *       
  *     }
  */
-/**
- * @api {post} /users/:id/pictures add a Picture
- *  
- * @apiName Add a Picture
- * @apiGroup User
- * 
- * @apiParam {String} firstname User firstname, mandatory
- * @apiParam {String} surname User surname, mandatory
- * @apiParam {String} password User password, mandatory
- * @apiParam {Objects[]} [pictures]  User pictures
- * @apiParam {Strings[]} [notes]  User notes
- * 
- * 
- * @apiParamExample Example Body:
- *    {
- *     "firstname": "Florian",
- *    "surname": "Quadri",
- *   "password": "123456"
- *   } 
- * 
- * 
- * @apiSuccess {String} firstName User name
- * @apiSuccess {String} surname  User surname
- * @apiSuccess {String} password  User password
- * 
- * @apiSuccessExample Success-Response:
- *     HTTP/1.1 200 OK
- *     {
- *       "votre user à été créé !"
- *       
- *     }
- */
+
+
+
 
 
 /**
@@ -382,7 +326,6 @@ export default router;
  *    "surname": "Ouakel",
  *   } 
  * 
- * 
  * @apiSuccess {String} firstName User name
  * @apiSuccess {String} surname  User surname
  * 
@@ -393,6 +336,9 @@ export default router;
  *       
  *     }
  */
+
+
+
 
 /**
  * @api {delete} /users/:id delete a User
@@ -416,5 +362,176 @@ export default router;
  *     {
  *       "votre user à été delete !"
  *       
+ *     }
+ */
+
+
+
+
+
+/**
+ * @api {post} /places/:id/pictures add a Picture
+ *  @apiPermission seulement les users connectés
+ * @apiName Add a Picture
+ * @apiGroup Picture
+ * 
+ * @apiParam {String} picture picture picture
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre picture à été ajoutée !"
+ *       
+ *     }
+ */
+
+
+
+
+/**
+ * @api {get} places/:id/pictures/:id Request a picture's information
+ *  
+ * @apiName GetPicture
+ * @apiGroup Picture
+ *
+ * @apiParam {Number} id Picture id 
+ *
+ * @apiSuccess {String} author picture's author
+ * @apiSuccess {String} place  picture's place
+ * @apiSuccess {String} picture[] picture's picture
+ * 
+ * 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "auhor": "aefj4clcro5jd3",
+ *       "place": "Chateau de Chillon",
+ *       "picture": "[1,2,3]"
+ * }
+ */
+
+
+
+/**
+ * @api {get} users/:id/notes/:id Request a note's information
+ *  
+ * @apiName GetNotes
+ * @apiGroup Note
+ *
+ * @apiParam {Number} id User id 
+ *
+ * @apiSuccess {String} author Note author
+ * @apiSuccess {String} place  Note place
+ * @apiSuccess {String} stars Note stars
+ * @apiSuccess {String} text  Note text
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "author": "aeff3f45sdfv4323",
+ *       "place": "ascc43233d3dre",
+ *      "stars": "2",
+ *     "text": "trébo"
+ *    }
+ * 
+ */
+
+
+
+
+    /**
+ * @api {post} places/:id/notes/ add a Note
+ *  @apiPermission seulement un user connecté
+ * @apiName Add a Note
+ * @apiGroup Note
+ * 
+ * @apiParam {Objects[]} stars Note stars
+ * @apiParam {Strings[]} text Note text
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *       "stars" : "3",
+ *      "text": "tréjoli"
+ *  }
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre note à été créé !"
+ *     }
+ */
+
+
+
+
+
+    /**
+ * @api {post} /places/ add a Place
+ *   @apiPermission seulement les users connectés
+ * @apiName Add a Place
+ * @apiGroup Place
+ * 
+ * @apiParam {String} name Place name
+ * @apiParam {String} canton User canton
+ * @apiParam {String} location Place location
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "name": "Chateau de Chillon",
+ *    "canton": "Vaud",
+ *   "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }"
+ * }
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre place à été créé !"
+ *       
+ *     }
+ */
+
+
+
+
+    /**
+ * @api {get} /places/:id Request a place's information
+ *  
+ * @apiName Get a Place
+ * @apiGroup Place
+ *
+ * @apiParam {Number} id Place id 
+ * @apiParam {String} name Place name 
+ *
+ * @apiSuccess {String} name Place name
+ * @apiSuccess {String} canton  Place canton
+ * @apiSuccess {Objects[]} location  Place location
+ * @apiSuccess {Strings[]} pictures Place pictures
+ * @apiSuccess {Strings[]} notes Place notes
+ * @apiSuccess {String[]} tags Place tags
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "name": "chateau de Chillon",
+ *       "canton": "Vaud",
+ *        "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }",
+ * "pictures": "{
+ *        1,
+ *        2,
+ *        3
+ *          }",
+ * "notes": "{
+ *        [stars : 3,text: tréjoli],
+ * [stars : 2, text: trébo]
+ *          }",
+ * "tags": "{chateau,
+ *           Lac}"
  *     }
  */
