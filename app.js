@@ -6,11 +6,12 @@ import config from "./config.js";
 
 
 /* mongoose.connect('mongodb://localhost/spotted'); */
-mongoose.connect('mongodb://https://spotted-rest-api.onrender.com/express-api');
+/* mongoose.connect('mongodb://https://spotted-rest-api.onrender.com/express-api'); */
 
 /* const server ='127.0.0.1'
 const database = 'spotted';
  */
+
 mongoose.connect(config.db.connection);
 
 
