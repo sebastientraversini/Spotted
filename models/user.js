@@ -10,11 +10,18 @@ const userSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique :true
+    validate: {
+      validator: validateWord,
+      message: 'Format incorrect. Please use minimal 3 letters and use only letters'
+    }
   },
   surname: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: validateWord,
+      message: 'Format incorrect. Please use minimal 3 letters and use only letters'
+    }
   }, pictures: [{
     type: Schema.Types.ObjectId,
     ref: 'Picture'
@@ -37,6 +44,11 @@ function transformJsonUser(doc, json, options) {
   // Remove the hashed password from the generated JSON.
   delete json.passwordHash;
   return json;
+}
+
+function validateWord(value) {
+  let isOk = /^[a-zA-Z]{3,}$/.test(value);
+  return isOk;
 }
 
 // Create the model from the schema and export it

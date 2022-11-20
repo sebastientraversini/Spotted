@@ -7,9 +7,11 @@ const router = express.Router();
 import multer from "multer";
 const upload = multer();
 
+import { textFormat } from "../spec/utils.js";
+import { textFormatToCompare } from "../spec/utils.js";
+
 
 import { authenticate } from "./auth.js";
-
 let offset = 0;
 let limit = 20;
 
@@ -56,14 +58,14 @@ function getPlaceId(req, res, next) {
 //créer une place --> check if this place already exists in this canton
 router.post('/', authenticate, async function (req, res, next) {
 
-  let newPlaceWished = req.body.name.trim().toUpperCase();
-  let cantonOfNewPlaceWished = req.body.canton.trim().toUpperCase();
+  let newPlaceWished = textFormatToCompare(req.body.name);
+  let cantonOfNewPlaceWished = textFormatToCompare(req.body.canton);
 
   let alreadyCreated = false;
   const places = await Place.find({}).limit(limit).exec()
   places.forEach((el) => {
-    let existingPlace = el.name.trim().toUpperCase();
-    let cantonOfExistingPlace = el.canton.trim().toUpperCase();
+    let existingPlace = textFormatToCompare(el.name);
+    let cantonOfExistingPlace = textFormatToCompare(el.canton);
     if (newPlaceWished === existingPlace && cantonOfExistingPlace === cantonOfNewPlaceWished) {
       alreadyCreated = true;
     };
@@ -75,8 +77,8 @@ router.post('/', authenticate, async function (req, res, next) {
 
   let item = {
     creator: req.userId,
-    name: req.body.name,
-    canton: req.body.canton,
+    name: textFormat(req.body.name),
+    canton: textFormat(req.body.canton),
     location: req.body.location,
     pictures: req.body.pictures,
     notes: req.body.note,
@@ -112,7 +114,7 @@ router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
       //update la place
       Place.findOneAndUpdate(
         { _id: req.place._id },
-        { name: req.body.name, canton: req.body.canton },
+        { name: textFormat(req.body.name), canton: textFormat(req.body.canton)},
         function (err, user) {
           if (err) {
             next(err);
@@ -229,7 +231,7 @@ router.get("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
 
 router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
 
-  let newTag = req.body.tag.trim().toUpperCase();
+  let newTag = textFormatToCompare(req.body.tag);
   console.log(newTag)
 
 
@@ -240,14 +242,14 @@ router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
     newArrayTags.push(el);
 
     if (el.trim().toUpperCase() === newTag) {
-      console.log(el.trim().toUpperCase(), newTag)
       alreadyInArray = true;
     }
   })
 
   if (!alreadyInArray) {
     //push le tag dans le nouveau tableau de tags
-    newArrayTags.push(req.body.tag)
+    let myNewTag = textFormat(req.body.tag);
+    newArrayTags.push(myNewTag)
     /*     res.send(newArrayTags) */
     //patch le tableau de tags 
 

@@ -9,6 +9,16 @@ export const cleanUpDatabase = async function() {
   ]);
 };
 
+export function textFormat(text){
+  let textLowerCase = text.toLowerCase();
+  let finalText = textLowerCase.charAt(0).toUpperCase() + textLowerCase.slice(1);
+  return finalText;
+  }
+
+  export function textFormatToCompare(text){
+    return text.trim().toUpperCase();
+   }
+
 
 import jwt from "jsonwebtoken"
 // ...
