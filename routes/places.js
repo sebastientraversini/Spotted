@@ -89,6 +89,7 @@ test();
 router.get("/:id", function(req, res, next){
   res.send(req.place);
 
+
 })
 
 //chercher by id

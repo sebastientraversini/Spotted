@@ -36,8 +36,8 @@ router.post("/", function (req, res, next) {
     }
     // Create a new document from the JSON in the request body
     const newUser = new User({
-      name : textFormat(req.body.name),
-      surname : textFormat(req.body.surname)
+      name: textFormat(req.body.name),
+      surname: textFormat(req.body.surname)
     });
     //on rentre le password hashé comme nouveau mdp de l'user
     newUser.passwordHash = hashedPassword;
@@ -208,9 +208,8 @@ router.delete("/:id", getUserId, authenticate, function (req, res, next) {
 
 });
 
-
+//modifier user
 router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
-  console.log(req.body.name)
 
   const filter = { _id: req.user._id };
   const update = {
@@ -225,13 +224,43 @@ router.patch("/:id", getUserId, authenticate, async function (req, res, next) {
   const userUpdated = await User.findOneAndUpdate(filter, update);
   res.send("Congrats, update has been made");
 
-
 });
 
 
 
-export default router;
+//modifier password user --> seulement le nôtre + si on se souvient du last mot de passe
+router.patch("/:id/password", getUserId, authenticate, async function (req, res, next) {
 
+  if (!req.user._id.equals(req.userId)) {
+    return res.status('403').send("You can't update password from others users")
+  }
+
+  //on prend le password envoyé dans le body (tentative de connexion)
+  const lastPassword = req.body.lastPassword;
+  let newPassword = req.body.newPassword;
+  //on prend le password Hashé de la database de cet user
+  const passwordHash = req.user.passwordHash;
+  //on les compare
+  const valid = await bcrypt.compare(lastPassword, passwordHash);
+  if (valid) {
+    const costFactor = 10;
+    //on hash le nouveau password + le sable
+    bcrypt.hash(newPassword, costFactor, async function (err, hashedPassword) {
+      if (err) {
+        return next(err);
+      }
+      //on rentre le password hashé comme nouveau mdp de l'user
+      const passwordUpdated = await User.findOneAndUpdate({ _id: req.user._id }, { passwordHash: hashedPassword });
+      res.send("Congrats, update has been made");
+    });
+
+  }
+  else { res.status(401).send("Last password is wrong. Please enter your true password") }
+
+});
+
+
+export default router;
 
 
 /**

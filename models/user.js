@@ -13,7 +13,8 @@ const userSchema = new Schema({
     validate: {
       validator: validateWord,
       message: 'Format incorrect. Please use minimal 3 letters and use only letters'
-    }
+    },
+    unique: true 
   },
   surname: {
     type: String,
