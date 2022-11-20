@@ -207,6 +207,11 @@ router.get("/:id/score", getPlaceId, function (req, res, next) {
 
 });
 
+//chercher les tags liés à une place
+router.get("/:id/tags", authenticate, getPlaceId, function (req, res, next){
+res.send(req.place.tags)
+})
+
 //ajouter un tag à une place s'il n'existe pas déjà
 
 router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
