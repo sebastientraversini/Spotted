@@ -11,8 +11,8 @@ import authRouter from "./routes/auth.js";
 
 import mongoose from 'mongoose';
 mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/express-api');
-
+mongoose.connect('mongodb://localhost/spotted');
+/* mongoose.connect('mongodb://localhost/express-api'); */
 const app = express();
 
 if (process.env.NODE_ENV !== 'test') {
