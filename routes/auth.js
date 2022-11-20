@@ -46,7 +46,7 @@ export default router;
 export function authenticate(req, res, next) {
     const authorizationHeader = req.get('Authorization');
     if (!authorizationHeader) {
-      return res.sendStatus(401);
+      return res.status(401).send("You are not allowed to do this. You have to authenticate")
     }
   
     const match = authorizationHeader.match(/^Bearer (.+)/);

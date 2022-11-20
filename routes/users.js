@@ -66,8 +66,6 @@ function getUserId(req, res, next) {
 
 //chercher by id
 router.get("/:id", getUserId, function (req, res, next) {
-  //si c'est un objectId valide
-  /* .populate pour avoir toutes les infos */
   res.send(req.user);
 
 });
@@ -76,8 +74,19 @@ router.get("/:id", getUserId, function (req, res, next) {
 //chercher photos d'un user
 router.get("/:id/pictures", getUserId, function (req, res, next) {
 
+  Picture.find().where('author').equals(req.user._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("pas de photo pour cet user");
+      return;
+    }
 
-  /*   Picture.aggregate([{
+    res.send(result);
+
+  });
+
+  /* avec aggregate 
+   Picture.aggregate([{
       $match: { author: req.user._id }
     },
     {
@@ -94,16 +103,7 @@ router.get("/:id/pictures", getUserId, function (req, res, next) {
       res.send(results)
     })
    */
-  Picture.find().where('author').equals(req.user._id).exec(function (err, result) {
-    if (result.length == 0 || err) {
-      // console.log(req.user)
-      res.send("pas de photo pour cet user");
-      return;
-    }
 
-    res.send(result);
-
-  });
 });
 
 //chercher notes d'un user

@@ -1,9 +1,11 @@
 import express from "express";
-
+import Picture from '../models/picture.js';
 import Place from '../models/place.js';
 import Note from '../models/note.js';
 
 const router = express.Router();
+import multer from "multer";
+const upload = multer();
 
 
 import { authenticate } from "./auth.js";
@@ -27,7 +29,7 @@ let limit = 20;
 
 // });
 
-
+//obtenir les places avec une limite
 router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
   const places = await Place.find({}).limit(limit).exec()
@@ -39,6 +41,7 @@ router.get("/:id", getPlaceId, function (req, res, next) {
   res.send(req.place);
 });
 
+//middleware id
 function getPlaceId(req, res, next) {
   if (req.params.id.match(/^[0-9a-fA-F]{24}$/)) {
     Place.findById(req.params.id).exec(function (err, place) {
@@ -55,45 +58,7 @@ function getPlaceId(req, res, next) {
   }
 }
 
-//poster une nouvelle note pour une place existante
-router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
-
-  let item = {
-    author: req.userId,
-    stars: req.body.stars,
-    text: req.body.text,
-    place: req.place._id
-  }
-
-  let data = new Note(item);
-
-  data.save(function (err, savedNote) {
-    if (err) {
-      next(err);
-    }
-    else {
-      res.send(savedNote);
-    }
-  });
-});
-
-//chercher toutes les notes liées à une place
-router.get("/:id/notes", getPlaceId, function (req, res, next) {
-
-  Note.find().where('place').equals(req.place._id).exec(function (err, result) {
-    if (result.length == 0 || err) {
-      // console.log(req.user)
-      res.send("pas de notes crées pour cette place");
-      return;
-    }
-
-    res.send(result);
-
-  });
-
-});
-
-
+//créer une place
 router.post('/', authenticate, function (req, res, next) {
   let item = {
     creator: req.userId,
@@ -106,7 +71,6 @@ router.post('/', authenticate, function (req, res, next) {
   }
   let data = new Place(item);
 
-
   data.save(function (err, savedPlace) {
     if (err) {
       next(err);
@@ -116,36 +80,40 @@ router.post('/', authenticate, function (req, res, next) {
 
 })
 
+//update une place
 
-router.post('/update', function (req, res, next) {
-  let item = {
+router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
 
-    name: req.body.name,
-    canton: req.body.canton,
-    location: req.body.location,
-    pictures: req.body.pictures,
-    note: req.body.note,
-    tags: req.body.tags,
-  }
-  let id = req.body.id;
-  Place.findById(id).then(function (err, doc) {
+  //checker si créateur place = l'user qui cherche à la modifier
+  Place.findById(req.place._id, function (err, docs) {
     if (err) {
-      console.error('Pas de truc trouvé')
+      console.log(err);
     }
-    doc.name = req.body.name;
-    doc.canton = req.body.canton;
-    doc.location = req.body.location;
-    doc.pictures = req.body.pictures;
-    doc.note = req.body.note;
-    doc.tags = req.body.tags;
+    else {
+      console.log(docs.creator, req.userId)
 
-    doc.save();
-  })
-  res.redirect('/')
+      if (!docs.creator.equals(req.userId)) {
+        return res.status('403').send("You can only delete places you created")
+      }
+
+      //update la place
+      Place.findOneAndUpdate(
+        { _id: req.place._id },
+        { name: req.body.name, canton : req.body.canton},
+         function (err, user) {
+        if (err) {
+          next(err);
+          return;
+        }
+        console.log(user)
+        res.send("tu as modifié la place, bravo !")
+      })
+    }
+  });
+
 })
 
-
-
+//supprimer une place
 router.delete('/:id', getPlaceId, authenticate, function (req, res, next) {
 
   Place.findById(req.place._id, function (err, docs) {
@@ -169,10 +137,86 @@ router.delete('/:id', getPlaceId, authenticate, function (req, res, next) {
     }
   });
 
+})
+
+//poster une nouvelle note pour une place existante
+router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
+
+  let item = {
+    author: req.userId,
+    stars: req.body.stars,
+    text: req.body.text,
+    place: req.place._id
+  }
+
+  let data = new Note(item);
+
+  data.save(function (err, savedNote) {
+    if (err) {
+      next(err);
+    }
+    else {
+      res.send(savedNote);
+    }
+  });
+});
+
+
+//chercher toutes les notes liées à une place
+router.get("/:id/notes", getPlaceId, function (req, res, next) {
+
+  Note.find().where('place').equals(req.place._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("pas de notes crées pour cette place");
+      return;
+    }
+
+    res.send(result);
+
+  });
+
+});
+
+//poster une nouvelle photo pour une place existante
+router.post('/:id/pictures',getPlaceId, authenticate, upload.single('picture'), function (req, res, next) {
+  /*     const bufferImage = Buffer.from(req.file); */
+  let item = {
+      author: req.userId,
+      place: req.place._id,  // Une place existe avant la photo, l'user choisit dans l'app la place et nous on envoie son id en body
+      picture: req.file.buffer  /* bufferImage */
+  }
+
+  let data = new Picture(item);
+
+
+  data.save(function (err, data) {
+      if (err) {
+          next(err)
+          return;
+      };
+
+      res.send(data)
+  });
 
 })
 
 
+//chercher toutes les photos liées à une place
+router.get("/:id/pictures", getPlaceId, function (req, res, next) {
+
+  Picture.find().where('place').equals(req.place._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("no pictures posted for this place");
+      return;
+    }
+
+    res.send(result);
+
+  });
+
+});
 
 export default router;
 
