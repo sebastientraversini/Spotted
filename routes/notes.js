@@ -146,7 +146,7 @@ export default router;
 
   /**
  * @api {post} /notes/ add a Note
- *  
+ *  @apiPermission seulement un user connecté
  * @apiName Add a Note
  * @apiGroup Note
  * 

@@ -283,7 +283,7 @@ export default router;
 
 /**
  * @api {post} /users/ add a User
- *  
+ *  @apiPermission seulement un user peut voir ses propres données
  * @apiName Add a User
  * @apiGroup User
  * 
