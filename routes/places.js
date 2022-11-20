@@ -33,8 +33,6 @@ router.get("/", async function (req, res, next) {
   res.send(places)
 
 
-  
-
 })
 
 
@@ -59,41 +57,6 @@ router.get("/tag", async function (req, res, next) {
 })
 
 
-
-
-router.get ("/:id/notes", function(req, res, next) {
-  
-console.log("on est arrivés dans la route");
-
-  /* if (req.place.notes.length == 0) {
-    res.send("Aucunes notes");
-  } */
-test();
-
-  async function test (){
-    req.place.populate(
-      {
-      path : "Notes",
-      populate : {path : "Note"}
-    }, 
-    
-     await function(err){
-      let arrayNotes = [];
-      req.place.notes.forEach((n)=>{
-        arrayPlaces.push(n.place);
-      })
-      res.send(arrayNotes);
-      })
-
-  }
-  
-
-})
-
-router.get("/:id", function(req, res, next){
-  res.send(req.place);
-
-})
 
 //chercher by id
 router.get("/:id", getPlaceId, function (req, res, next) {
@@ -238,6 +201,22 @@ router.post("/:id/notes", getPlaceId, authenticate, function (req, res, next) {
   });
 });
 
+
+//chercher toutes les notes détaillées liées à une place
+router.get("/:id/notes", getPlaceId, function (req, res, next) {
+
+  Note.find().where('place').equals(req.place._id).exec(function (err, result) {
+    if (result.length == 0 || err) {
+      // console.log(req.user)
+      res.send("pas de notes crées pour cette place");
+      return;
+    }
+
+    res.send(result);
+
+  });
+
+});
 
 
 
