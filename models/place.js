@@ -11,14 +11,22 @@ const Schema = mongoose.Schema;
 const placeSchema = new Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: validateWord,
+      message: '{VALUE} is not a valid word. Use minimal 3 letters and use only letters'
+    }
   },
   creator: { type: Schema.Types.ObjectId, ref: 'User', required:true},
 
 
   canton: {
     type: String,
-    required: true
+    required: true,
+    validate: {
+      validator: validateWord,
+      message: '{VALUE} is not a valid word. Use minimal 3 letters and use only letters'
+    }
   },
   location: {
     type: {
@@ -58,4 +66,10 @@ function isLatitude(value) {
 function isLongitude(value) {
   return value >= -180 && value <= 180;
 }
+
+function validateWord(value) {
+  let isOk = /^[a-zA-Z]{3,}$/.test(value);
+  return isOk;
+}
+
 export default mongoose.model('Place', placeSchema);

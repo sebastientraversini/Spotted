@@ -7,14 +7,13 @@ const router = express.Router();
 import multer from "multer";
 const upload = multer();
 
+import { textFormat } from "../spec/utils.js";
+import { textFormatToCompare } from "../spec/utils.js";
+
 
 import { authenticate } from "./auth.js";
-
-
 let offset = 0;
 let limit = 20;
-
-
 
 // router.get("/:nom-:prenom")
 // req.params.nom // nom
@@ -25,8 +24,6 @@ let limit = 20;
 //     res.render('index',{index:doc});
 
 //   })
-
-
 // });
 
 //obtenir les places avec une limite
@@ -35,7 +32,29 @@ router.get("/", async function (req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 
+
   
+
+})
+
+
+
+//get places filtered by cantons
+router.get("/filter", async function (req, res, next) {
+  console.log("ca marche");
+  let canton = req.query.canton;
+  console.log(canton);
+  const places = await Place.find({ canton: canton}).exec();
+  res.send(places)
+
+})
+
+
+router.get("/tag", async function (req, res, next) {
+  let [tags] = req.query.tags;
+  
+  const places = await Place.find({ tags: [tags]}).exec()
+  res.send(places)
 
 })
 
@@ -70,6 +89,7 @@ test();
 
 router.get("/:id", function(req, res, next){
   res.send(req.place);
+
 })
 
 //chercher by id
@@ -94,12 +114,30 @@ function getPlaceId(req, res, next) {
   }
 }
 
-//créer une place
-router.post('/', authenticate, function (req, res, next) {
+//créer une place --> check if this place already exists in this canton
+router.post('/', authenticate, async function (req, res, next) {
+
+  let newPlaceWished = textFormatToCompare(req.body.name);
+  let cantonOfNewPlaceWished = textFormatToCompare(req.body.canton);
+
+  let alreadyCreated = false;
+  const places = await Place.find({}).limit(limit).exec()
+  places.forEach((el) => {
+    let existingPlace = textFormatToCompare(el.name);
+    let cantonOfExistingPlace = textFormatToCompare(el.canton);
+    if (newPlaceWished === existingPlace && cantonOfExistingPlace === cantonOfNewPlaceWished) {
+      alreadyCreated = true;
+    };
+  })
+
+  if (alreadyCreated) {
+    return res.status(400).send("This place already exists")
+  }
+
   let item = {
     creator: req.userId,
-    name: req.body.name,
-    canton: req.body.canton,
+    name: textFormat(req.body.name),
+    canton: textFormat(req.body.canton),
     location: req.body.location,
     pictures: req.body.pictures,
     notes: req.body.note,
@@ -135,7 +173,7 @@ router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
       //update la place
       Place.findOneAndUpdate(
         { _id: req.place._id },
-        { name: req.body.name, canton: req.body.canton },
+        { name: textFormat(req.body.name), canton: textFormat(req.body.canton)},
         function (err, user) {
           if (err) {
             next(err);
@@ -214,6 +252,9 @@ router.get("/:id/notes", getPlaceId, function (req, res, next) {
 
 });
 
+
+
+
 //chercher la note globale (1-5) d'une place
 router.get("/:id/score", getPlaceId, function (req, res, next) {
 
@@ -243,11 +284,16 @@ router.get("/:id/score", getPlaceId, function (req, res, next) {
 
 });
 
+//chercher les tags liés à une place
+router.get("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
+  res.send(req.place.tags)
+})
+
 //ajouter un tag à une place s'il n'existe pas déjà
 
 router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
 
-  let newTag = req.body.tag;
+  let newTag = textFormatToCompare(req.body.tag);
   console.log(newTag)
 
 
@@ -256,15 +302,17 @@ router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
   let newArrayTags = [];
   arrayExistingTags.forEach((el) => {
     newArrayTags.push(el);
-    if (el === req.body.tag) {
+
+    if (el.trim().toUpperCase() === newTag) {
       alreadyInArray = true;
     }
   })
 
   if (!alreadyInArray) {
     //push le tag dans le nouveau tableau de tags
-    newArrayTags.push(req.body.tag)
-/*     res.send(newArrayTags) */
+    let myNewTag = textFormat(req.body.tag);
+    newArrayTags.push(myNewTag)
+    /*     res.send(newArrayTags) */
     //patch le tableau de tags 
 
     Place.findById(req.place._id, function (err, docs) {
@@ -274,7 +322,7 @@ router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
       else {
         Place.findOneAndUpdate(
           { _id: req.place._id },
-          { tags : newArrayTags },
+          { tags: newArrayTags },
           function (err, user) {
             if (err) {
               next(err);
@@ -339,7 +387,7 @@ export default router;
 /**
  * @api {get} /places/:id Request a place's information
  *  
- * @apiName GetPlace
+ * @apiName Get a Place
  * @apiGroup Place
  *
  * @apiParam {Number} id Place id 
@@ -376,17 +424,17 @@ export default router;
  */
 
 /**
- * @api {post} /places/ add Place
- *  
- * @apiName AddPlace
+ * @api {post} /places/ add a Place
+ *   @apiPermission seulement les users connectés
+ * @apiName Add a Place
  * @apiGroup Place
  * 
- * @apiParam {String} name Place name, mandatory
- * @apiParam {String} canton place canton, mandatory
- * @apiParam {String} location Place location, mandatory
- * @apiParam {Objects[]} pictures  place pictures, not mandatory
- * @apiParam {Strings[]} notes  place notes, not mandatory
- * @apiParam {Strings[]} tags  place tags, not mandatory
+ * @apiParam {String} name Place name
+ * @apiParam {String} canton User canton
+ * @apiParam {String} location Place location
+ * @apiParam {Objects[]} [pictures]  User pictures
+ * @apiParam {Strings[]} [notes]  User notes
+ * @apiParam {Strings[]} [tags] User tags
  * 
  * 
  * @apiParamExample Example Body:
@@ -412,14 +460,14 @@ export default router;
  * 
  * 
  * 
- * @apiSuccess {String} firstName place name
- * @apiSuccess {String} surname  place surname
- * @apiSuccess {String} password  place password
+ * @apiSuccess {String} name Place name
+ * @apiSuccess {String} canton User canton
+ * @apiSuccess {String} location Place location
  * 
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
- *       "votre user à été créé !"
+ *       "votre place à été créé !"
  *       
  *     }
  */
