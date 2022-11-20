@@ -250,7 +250,8 @@ export default router;
 
 /**
  * @api {get} /users/:id Request a user's information
- *  
+ *  @apiPermission seulement un user peut voir ses propres données
+ * 
  * @apiName Get a User
  * @apiGroup User
  *
@@ -279,11 +280,42 @@ export default router;
  *          }",
  * "passwordHash": "s234jdsl31osaweak23o",
  *     }
+ * 
+ * @apiError {String} id Pas d'utilisateur avec cet id, cherche mieux
+ * @apiError {String} id2 unauthorized
+ * @apiErrorExample {json} Error-Response:      
+ * HTTP/1.1 404 Not Found 
+ *     { 
+ *      "error": "Pas d'utilisateur avec cet id, cherche mieux" 
+ *     }
+ */
+
+/**
+ * @api {get} /users/:id/pictures Request a user's pictures
+ *  @apiPermission seulement un user peut voir ses propres photos
+ * 
+ * @apiName Get a User's pictures
+ * @apiGroup User
+ *
+ * @apiParam {Number} id User id 
+ *
+ * @apiSuccess {String} author picture author
+ * @apiSuccess {String} place  picture place
+ * @apiSuccess {String} picture picture picture
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "auhor": "aefj4clcro5jd3",
+ *       "place": "Chateau de Chillon",
+ *       "picture": "[1,2,3]"
+ * 
+ * }
  */
 
 /**
  * @api {post} /users/ add a User
- *  @apiPermission seulement un user peut voir ses propres données
+ *  
  * @apiName Add a User
  * @apiGroup User
  * 
@@ -313,6 +345,39 @@ export default router;
  *       
  *     }
  */
+/**
+ * @api {post} /users/:id/pictures add a Picture
+ *  
+ * @apiName Add a Picture
+ * @apiGroup User
+ * 
+ * @apiParam {String} firstname User firstname, mandatory
+ * @apiParam {String} surname User surname, mandatory
+ * @apiParam {String} password User password, mandatory
+ * @apiParam {Objects[]} [pictures]  User pictures
+ * @apiParam {Strings[]} [notes]  User notes
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "firstname": "Florian",
+ *    "surname": "Quadri",
+ *   "password": "123456"
+ *   } 
+ * 
+ * 
+ * @apiSuccess {String} firstName User name
+ * @apiSuccess {String} surname  User surname
+ * @apiSuccess {String} password  User password
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre user à été créé !"
+ *       
+ *     }
+ */
+
 
 /**
  * @api {patch} /users/:id change a User
