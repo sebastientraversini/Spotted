@@ -1,16 +1,14 @@
 import express from "express";
-import User from '../models/user.js';
+import User from "../models/user.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import * as config from "../config.js"
+import * as config from "../config.js";
 import { authenticate } from "./auth.js";
 import Picture from "../models/picture.js";
 import Note from "../models/note.js";
 import Place from "../models/place.js";
 import { textFormat } from "../spec/utils.js";
 import { textFormatToCompare } from "../spec/utils.js";
-
-
 
 const router = express.Router();
 
@@ -67,12 +65,26 @@ function getUserId(req, res, next) {
   }
 }
 
-
 //chercher by id
 router.get("/:id", getUserId, function (req, res, next) {
   res.send(req.user);
-
 });
+
+router.patch("/:id", getUserId, async function (req, res, next) {
+
+  const updated = await User.update(
+    {
+      _id: req.user.id,
+    },
+    {
+      name: req.body.name,
+      surname: req.body.surname
+    }
+  );
+
+  res.send("user modifié");
+});
+
 
 
 //chercher photos d'un user
@@ -246,14 +258,14 @@ export default router;
  * @apiName Get a User
  * @apiGroup User
  *
- * @apiParam {Number} id User id 
+ * @apiParam {Number} id User id
  *
  * @apiSuccess {String} firstName User name
  * @apiSuccess {String} lastName  User surname
  * @apiSuccess {Objects[]} pictures  User pictures
  * @apiSuccess {Strings[]} notes  User notes
  * @apiSuccess {String} passwordHash  User passwordHash
- * 
+ *
  * @apiSuccessExample Success-Response:
  *     HTTP/1.1 200 OK
  *     {
