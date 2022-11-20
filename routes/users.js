@@ -21,6 +21,8 @@ router.get("/", authenticate, function (req, res, next) {
   });
 });
 
+
+//créer user
 router.post("/", function (req, res, next) {
   //on récupère le password envoyé dans la requête
   const plainPassword = req.body.password;
@@ -274,7 +276,7 @@ export default router;
 
 
 /**
- * @api {get} /users/:id Request a user's information
+ * @api {get} https://spotted-rest-api.onrender.com/users/:id Request a user's information
  *  @apiPermission seulement un user peut voir ses propres données
  * 
  * @apiName Get a User
@@ -320,7 +322,7 @@ export default router;
 
 
 /**
- * @api {post} /users/ add a User
+ * @api {post} https://spotted-rest-api.onrender.com/users/ add a User
  *  
  * @apiName Add a User
  * @apiGroup User
@@ -349,7 +351,7 @@ export default router;
 
 
 /**
- * @api {patch} /users/:id change a User
+ * @api {patch} https://spotted-rest-api.onrender.com/users/:id change a User
  * @apiPermission seulement un user peut modifier ses propres données
  *  
  * @apiName change a User
@@ -380,7 +382,7 @@ export default router;
 
 
 /**
- * @api {delete} /users/:id delete a User
+ * @api {delete} https://spotted-rest-api.onrender.com/users/:id delete a User
  *  
  * @apiName delete a User
  * @apiGroup User
@@ -409,7 +411,7 @@ export default router;
 
 
 /**
- * @api {post} /places/:id/pictures add a Picture
+ * @api {post} https://spotted-rest-api.onrender.com/places/:id/pictures add a Picture
  *  @apiPermission seulement les users connectés
  * @apiName Add a Picture
  * @apiGroup Picture
@@ -428,7 +430,7 @@ export default router;
 
 
 /**
- * @api {get} places/:id/pictures/:id Request a picture's information
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/pictures/:id Request a picture's information
  *  
  * @apiName GetPicture
  * @apiGroup Picture
@@ -453,7 +455,7 @@ export default router;
 
 
 /**
- * @api {get} users/:id/notes/:id Request a note's information
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/notes/:id Request a note's information
  *  
  * @apiName GetNotes
  * @apiGroup Note
@@ -479,98 +481,127 @@ export default router;
 
 
 
-/**
-* @api {post} places/:id/notes/ add a Note
-*  @apiPermission seulement un user connecté
-* @apiName Add a Note
-* @apiGroup Note
-* 
-* @apiParam {Objects[]} stars Note stars
-* @apiParam {Strings[]} text Note text
-* 
-* @apiParamExample Example Body:
-*    {
-*       "stars" : "3",
-*      "text": "tréjoli"
-*  }
-* 
-* @apiSuccessExample Success-Response:
-*     HTTP/1.1 200 OK
-*     {
-*       "votre note à été créé !"
-*     }
-*/
+    /**
+ * @api {post} https://spotted-rest-api.onrender.com/places/:id/notes/ add a Note
+ *  @apiPermission seulement un user connecté
+ * @apiName Add a Note
+ * @apiGroup Note
+ * 
+ * @apiParam {Objects} stars Note stars
+ * @apiParam {Strings} text Note text
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *       "stars" : "3",
+ *      "text": "tréjoli"
+ *  }
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre note à été créé !"
+ *     }
+ */
 
 
 
 
 
-/**
-* @api {post} /places/ add a Place
-*   @apiPermission seulement les users connectés
-* @apiName Add a Place
-* @apiGroup Place
-* 
-* @apiParam {String} name Place name
-* @apiParam {String} canton User canton
-* @apiParam {String} location Place location
-* 
-* @apiParamExample Example Body:
-*    {
-*     "name": "Chateau de Chillon",
-*    "canton": "Vaud",
-*   "location": "{
-*        1324324234.23,
-*        234234234234.76556
-*        }"
-* }
-* 
-* @apiSuccessExample Success-Response:
-*     HTTP/1.1 200 OK
-*     {
-*       "votre place à été créé !"
-*       
-*     }
-*/
+    /**
+ * @api {post} https://spotted-rest-api.onrender.com/places/ add a Place
+ *   @apiPermission seulement les users connectés
+ * @apiName Add a Place
+ * @apiGroup Place
+ * 
+ * @apiParam {String} name Place name
+ * @apiParam {String} canton User canton
+ * @apiParam {String} location Place location
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "name": "Chateau de Chillon",
+ *    "canton": "Vaud",
+ *   "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }"
+ * }
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre place à été créé !"
+ *       
+ *     }
+ */
 
 
 
 
-/**
-* @api {get} /places/:id Request a place's information
-*  
-* @apiName Get a Place
-* @apiGroup Place
-*
-* @apiParam {Number} id Place id 
-* @apiParam {String} name Place name 
-*
-* @apiSuccess {String} name Place name
-* @apiSuccess {String} canton  Place canton
-* @apiSuccess {Objects[]} location  Place location
-* @apiSuccess {Strings[]} pictures Place pictures
-* @apiSuccess {Strings[]} notes Place notes
-* @apiSuccess {String[]} tags Place tags
-* 
-* @apiSuccessExample Success-Response:
-*     HTTP/1.1 200 OK
-*     {
-*       "name": "chateau de Chillon",
-*       "canton": "Vaud",
-*        "location": "{
-*        1324324234.23,
-*        234234234234.76556
-*        }",
-* "pictures": "{
-*        1,
-*        2,
-*        3
-*          }",
-* "notes": "{
-*        [stars : 3,text: tréjoli],
-* [stars : 2, text: trébo]
-*          }",
-* "tags": "{chateau,
-*           Lac}"
-*     }
-*/
+    /**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id Request a place's information
+ *  
+ * @apiName Get a Place
+ * @apiGroup Place
+ *
+ * @apiParam {Number} id Place id 
+ * @apiParam {String} name Place name 
+ *
+ * @apiSuccess {String} name Place name
+ * @apiSuccess {String} canton  Place canton
+ * @apiSuccess {Objects[]} location  Place location
+ * @apiSuccess {Strings[]} pictures Place pictures
+ * @apiSuccess {Strings[]} notes Place notes
+ * @apiSuccess {String[]} tags Place tags
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "name": "chateau de Chillon",
+ *       "canton": "Vaud",
+ *        "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }",
+ * "pictures": "{
+ *        1,
+ *        2,
+ *        3
+ *          }",
+ * "notes": "{
+ *        [stars : 3,text: tréjoli],
+ * [stars : 2, text: trébo]
+ *          }",
+ * "tags": "{chateau,
+ *           Lac}"
+ *     }
+ */
+
+
+
+
+
+        /**
+ * @api {connexion} https://spotted-rest-api.onrender.com/login Connect with a user
+ * @apiDescription Pour se connecter, il faut utiliser les paramètres d'un utilisateur. Son nom, nom de famille et son mot de passe. Quasiment toutes les opérations suivantes requirent d'être connecté.
+ * @apiName Connexion
+ * @apiGroup Connexion
+ *
+ * 
+ * @apiParam {String} name User name 
+ * @apiParam {String} surname User surname 
+ * @apiParam {String} password User password 
+ *
+ * @apiSuccess {String} name User name 
+ * @apiSuccess {String} surname User surname 
+ * @apiSuccess {String} password User password 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "name": "Sébastien",
+ *       "surname": "Traversini",
+ *        "password": "password1"
+ *     }
+ * 
+ */

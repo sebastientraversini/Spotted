@@ -32,6 +32,7 @@ router.get("/", async function (req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 
+  
 
 })
 
@@ -42,17 +43,45 @@ router.get("/filter", async function (req, res, next) {
   console.log("ca marche");
   let canton = req.query.canton;
   console.log(canton);
-  const places = await Place.find({ canton: canton}).exec();
+  const places = await Place.find({ canton: canton }).exec();
   res.send(places)
 
 })
 
 
+//obtenir les places qui contiennent ce tag
 router.get("/tag", async function (req, res, next) {
-  let [tags] = req.query.tags;
-  
-  const places = await Place.find({ tags: [tags]}).exec()
-  res.send(places)
+
+  let arrayPlacesWithThisTag = [];
+  console.log(req.body.tag)
+  let tagSearched = textFormatToCompare(req.body.tag);
+
+  let allPlaces = await Place.find({}).limit(limit).exec()
+  allPlaces.forEach((el) => {
+    //je suis dans chaque place
+    let tagInThisPlace = false;
+    el.tags.forEach((t) => {
+      //je suis dans chaque tag
+      if (textFormatToCompare(t) === tagSearched) {
+        tagInThisPlace = true;
+      }
+      console.log(t)
+    })
+    //si tag est présent dans cette place, on ajoute la place dans tableau des places contenant ce tag
+    if (tagInThisPlace) {
+      arrayPlacesWithThisTag.push(el);
+    }
+    /*     console.log(el.tags) */
+  })
+
+
+  /*   let [tags] = req.query.tags;
+    
+    const places = await Place.find({ tags: [tags]}).exec() */
+    if(arrayPlacesWithThisTag.length == 0) {
+      return res.send("no place contains this tag")
+    }
+  res.send(arrayPlacesWithThisTag)
 
 })
 
@@ -139,7 +168,7 @@ router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
       //update la place
       Place.findOneAndUpdate(
         { _id: req.place._id },
-        { name: textFormat(req.body.name), canton: textFormat(req.body.canton)},
+        { name: textFormat(req.body.name), canton: textFormat(req.body.canton) },
         function (err, user) {
           if (err) {
             next(err);
