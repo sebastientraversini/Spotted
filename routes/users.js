@@ -441,14 +441,90 @@ export default router;
  */
 
 
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/users/:id/notes Request all notes from a user 
+ *  
+ * @apiName GetNotesFromAUser
+ * @apiGroup Note
+ *
+ * @apiParam {Number} id User id 
+ *
+ * @apiSuccess {String[]} notes User notes
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "author": "aeff3f45sdfv4323",
+ *       "place": "ascc43233d3dre",
+ *      "stars": "2",
+ *     "text": "trébo"
+ *    },
+ *  {
+ *       "author": "k4tjjjgj44gfd3",
+ *       "place": "dsfgffgbt33g",
+ *      "stars": "3",
+ *     "text": "tréjoli"
+ *    }
+ * 
+ */
+
+
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/notes Request all notes from a place
+ *  
+ * @apiName GetNotesFromPlace
+ * @apiGroup Note
+ *
+ * @apiParam {Number} id Note id 
+ *
+ * @apiSuccess {String} notes Note information
+ 
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "author": "aeff3f45sdfv4323",
+ *       "place": "ascc43233d3dre",
+ *      "stars": "2",
+ *     "text": "trébo"
+ *    }
+ * 
+ */
+
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/notes/:id Request a note's information
+ *  
+ * @apiName GetNoteDirectly
+ * @apiGroup Note
+ *
+ * @apiParam {Number} id Note id 
+ *
+ * @apiSuccess {String} author Note author
+ * @apiSuccess {String} place  Note place
+ * @apiSuccess {String} stars Note stars
+ * @apiSuccess {String} text  Note text
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "author": "aeff3f45sdfv4323",
+ *       "place": "ascc43233d3dre",
+ *      "stars": "2",
+ *     "text": "trébo"
+ *    }
+ * 
+ */
+
 
 /**
  * @api {get} https://spotted-rest-api.onrender.com/places/:id/notes/:id Request a note's information
  *  
- * @apiName GetNotes
+ * @apiName GetANoteFromAPlace
  * @apiGroup Note
  *
- * @apiParam {Number} id User id 
+ * @apiParam {Number} id Note id 
  *
  * @apiSuccess {String} author Note author
  * @apiSuccess {String} place  Note place
@@ -566,6 +642,60 @@ export default router;
  */
 
 
+
+ /**
+ * @api {get} https://spotted-rest-api.onrender.com/users/:id/visitedPlaces Request all pictures from a user
+ *  
+ * @apiName GetPicturesFromAUser
+ * @apiGroup Picture
+ *
+ * @apiParam {String} id User id 
+ *
+ * @apiSuccess {Strings[]} pictures Place pictures
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "pictures": "[1,2,3,4,5]"
+ *     }
+ */
+
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:tag Request all pictures that contains this tag
+ *  
+ * @apiName GetPicturesFromAUser
+ * @apiGroup Picture
+ *
+ * @apiParam {String} id User id 
+ *
+ * @apiSuccess {Strings[]} pictures Place pictures
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "pictures": "[1,2,3,4,5]"
+ *     }
+ */
+
+
+
+/**
+ * @api {get} https://spotted-rest-api.onrender.com/places/:id/visitedPlaces Request all pictures from a user
+ *  
+ * @apiName GetPicturesFromAUser
+ * @apiGroup Picture
+ *
+ * @apiParam {String} id User id 
+ *
+ * @apiSuccess {Strings[]} pictures Place pictures
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "pictures": "[1,2,3,4,5]"
+ *     }
+ */
 
 
 
