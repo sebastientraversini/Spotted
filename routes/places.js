@@ -31,6 +31,66 @@ router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
+<<<<<<< Updated upstream
+=======
+
+  
+
+})
+
+
+
+//get places filtered by cantons
+router.get("/filter", async function (req, res, next) {
+  console.log("ca marche");
+  let canton = req.query.canton;
+  console.log(canton);
+  const places = await Place.find({ canton: canton}).exec();
+  res.send(places)
+
+})
+
+
+router.get("/tag", async function (req, res, next) {
+  let [tags] = req.query.tags;
+  
+  const places = await Place.find({ tags: [tags]}).exec()
+  res.send(places)
+
+})
+
+router.get ("/:id/notes", function(req, res, next) {
+  
+console.log("on est arrivés dans la route");
+
+  /* if (req.place.notes.length == 0) {
+    res.send("Aucunes notes");
+  } */
+test();
+
+  async function test (){
+    req.place.populate(
+      {
+      path : "Notes",
+      populate : {path : "Note"}
+    }, 
+    
+     await function(err){
+      let arrayNotes = [];
+      req.place.notes.forEach((n)=>{
+        arrayPlaces.push(n.place);
+      })
+      res.send(arrayNotes);
+      })
+
+  }
+  
+
+})
+
+router.get("/:id", function(req, res, next){
+  res.send(req.place);
+>>>>>>> Stashed changes
 })
 
 //chercher by id
@@ -192,6 +252,9 @@ router.get("/:id/notes", getPlaceId, function (req, res, next) {
   });
 
 });
+
+
+
 
 //chercher la note globale (1-5) d'une place
 router.get("/:id/score", getPlaceId, function (req, res, next) {
