@@ -7,19 +7,11 @@ const router = express.Router();
 import multer from "multer";
 const upload = multer();
 
+import { textFormat } from "../spec/utils.js";
+import { textFormatToCompare } from "../spec/utils.js";
+
 
 import { authenticate } from "./auth.js";
-
-function textFormat(text){
-  let textLowerCase = text.toLowerCase();
-  let finalText = textLowerCase.charAt(0).toUpperCase() + textLowerCase.slice(1);
-  return finalText;
-  }
-
-  function textFormatToCompare(text){
-   return text.trim().toUpperCase();
-  }
-
 let offset = 0;
 let limit = 20;
 
