@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import places from "./place.js"
 import users from "./user.js"
-
+await mongoose.connect
 const Schema = mongoose.Schema;
 // Define the schema for pictures
 
