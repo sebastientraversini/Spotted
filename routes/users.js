@@ -19,7 +19,6 @@ router.get("/", authenticate, function (req, res, next) {
     if (err) {
       return next(err);
     }
-
     res.send(users);
   });
 });
