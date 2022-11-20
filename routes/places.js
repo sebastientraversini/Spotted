@@ -371,16 +371,16 @@ export default router;
 
 /**
  * @api {post} /places/ add a Place
- *  
+ *   @apiPermission seulement les users connectés
  * @apiName Add a Place
  * @apiGroup Place
  * 
- * @apiParam {String} name Place name, mandatory
- * @apiParam {String} canton User canton, mandatory
- * @apiParam {String} location Place location, mandatory
- * @apiParam {Objects[]} pictures  User pictures, not mandatory
- * @apiParam {Strings[]} notes  User notes, not mandatory
- * @apiParam {Strings[]} tags  User tags, not mandatory
+ * @apiParam {String} name Place name
+ * @apiParam {String} canton User canton
+ * @apiParam {String} location Place location
+ * @apiParam {Objects[]} [pictures]  User pictures
+ * @apiParam {Strings[]} [notes]  User notes
+ * @apiParam {Strings[]} [tags] User tags
  * 
  * 
  * @apiParamExample Example Body:
