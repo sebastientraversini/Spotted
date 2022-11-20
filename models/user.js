@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import notes from './note.js';
 
 import pictures from './picture.js';
-await mongoose.connect
+
 
 const Schema = mongoose.Schema;
 // Define the schema for users

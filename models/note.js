@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import users from './user.js';
 import places from './place.js';
-await mongoose.connect
+
 const Schema = mongoose.Schema;
 // Define the schema for notes
 const noteSchema = new Schema({
