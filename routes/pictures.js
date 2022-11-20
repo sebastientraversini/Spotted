@@ -12,18 +12,17 @@ import User from "../models/user.js"
 
 router.get("/", function (req, res, next) {
 
-    /* Pictures.find().sort('name').exec(function(err, pictures) {
+    Picture.find().sort('name').exec(function(err, pictures) {
         if (err) {
           return next(err);
         }
         res.send(pictures);
-      }); */
-
-
-    res.send("Got a response from the notes route and it works well");
+      }); 
 });
 
 //mettre npm multer et installer pour que cela fonctionne en renvoyant req.file
+
+//poster une photo
 router.post('/', authenticate, upload.single('picture'), function (req, res, next) {
     /*     const bufferImage = Buffer.from(req.file); */
     let item = {
@@ -34,14 +33,6 @@ router.post('/', authenticate, upload.single('picture'), function (req, res, nex
 
     let data = new Picture(item);
 
-
-    //comment lier cette photo à l'user
-
-/*     let authorPicture = User.findById(req.userId);
-    authorPicture.update
-    res.send(authorPicture)  */
-
-    //parser le json pour envoyer en form-data
 
     data.save(function (err, data) {
         if (err) {

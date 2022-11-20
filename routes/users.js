@@ -6,6 +6,7 @@ import * as config from "../config.js";
 import { authenticate } from "./auth.js";
 import Picture from "../models/picture.js";
 import Note from "../models/note.js";
+import Place from "../models/place.js";
 
 const router = express.Router();
 
@@ -64,8 +65,6 @@ function getUserId(req, res, next) {
 
 //chercher by id
 router.get("/:id", getUserId, function (req, res, next) {
-  //si c'est un objectId valide
-  /* .populate pour avoir toutes les infos */
   res.send(req.user);
 });
 
@@ -89,23 +88,6 @@ router.patch("/:id", getUserId, async function (req, res, next) {
 //chercher photos d'un user
 router.get("/:id/pictures", getUserId, function (req, res, next) {
 
-
-  Picture.aggregate([{
-    $match: { author: req.user._id }
-  },
-  {
-    $lookup: {
-      from: 'users',
-      localField: 'author',
-      foreignField: '_id',
-      as: 'licorne'
-    }
-  },
-  { $unwind: '$licorne' }], (err, results) => {
-    if (err) console.log(err)
-    console.log(results)
-  })
-
   Picture.find().where('author').equals(req.user._id).exec(function (err, result) {
     if (result.length == 0 || err) {
       // console.log(req.user)
@@ -116,12 +98,32 @@ router.get("/:id/pictures", getUserId, function (req, res, next) {
     res.send(result);
 
   });
+
+  /* avec aggregate 
+   Picture.aggregate([{
+      $match: { author: req.user._id }
+    },
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'author',
+        foreignField: '_id',
+        as: 'licorne'
+      }
+    },
+    { $unwind: '$licorne' }], (err, results) => {
+      if (err) console.log(err)
+      console.log(results)
+      res.send(results)
+    })
+   */
+
 });
 
 //chercher notes d'un user
 router.get("/:id/notes", getUserId, function (req, res, next) {
 
-  Note.find().where('author').equals(req.user._id).exec(function (err, result) {
+  Note.find().where('author').equals(req.user._id).populate("place").exec(function (err, result) {
     if (result.length == 0 || err) {
       // console.log(req.user)
       res.send("cet user n'a décerné aucune note à une place");
@@ -139,26 +141,56 @@ router.get("/:id/notes", getUserId, function (req, res, next) {
 //chercher places visitées d'un user (en passant par Notes)
 router.get("/:id/visitedPlaces", getUserId, function (req, res, next) {
 
-  Note.find().where('author').equals(req.user._id).exec(function (err, result) {
+  Note.find().where('author').equals(req.user._id).populate("place").exec(function (err, result) {
     if (result.length == 0 || err) {
       // console.log(req.user)
       res.send("cet user n'a visité aucune place");
       return;
     }
-
     let visitedPlaces = [];
-
     result.forEach((n) => {
       visitedPlaces.push(n.place)
     })
-//map de l'array pour transformer l'objectId en String pour pouvoir le filtrer
-    const mappedFilterArray = visitedPlaces.map(place => place.toString());
 
-    let uniqueVisitedPlaces = Array.from(new Set(mappedFilterArray));
+    const simplifiedVisitedPlaces = visitedPlaces.map(place => {
+      return {
+        _id: place._id,
+        location: place.location.coordinates,
+        name: place.name,
+        canton: place.canton
+      }
+    })
 
-    console.log(uniqueVisitedPlaces)
+    let monArrayFinal = [];
 
-    res.send(uniqueVisitedPlaces);
+    simplifiedVisitedPlaces.forEach((el) => {
+      let oneVisitedPlace = el._id
+      let alreadyInArray = false;
+      monArrayFinal.forEach((el2) => {
+        if (el2._id && el2._id == el._id) {
+          alreadyInArray = true;
+          console.log("estLa")
+        }
+      })
+
+      if (!alreadyInArray) {
+        monArrayFinal.push({
+          _id: el._id,
+          location: el.location,
+          name: el.name,
+          canton: el.canton
+        })
+      }
+    })
+    res.send(monArrayFinal)
+    //map de l'array pour transformer l'objectId en String pour pouvoir le filtrer
+    /*     const mappedFilterArray = visitedPlaces.map(place => place.toString());
+    
+        let uniqueVisitedPlaces = Array.from(new Set(mappedFilterArray));
+    
+        console.log(uniqueVisitedPlaces)
+    
+        res.send(uniqueVisitedPlaces); */
 
   });
 
