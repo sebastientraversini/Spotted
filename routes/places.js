@@ -32,6 +32,7 @@ router.get("/", async function (req, res, next) {
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 
+  
 
 })
 
@@ -113,6 +114,7 @@ router.get("/tag", async function (req, res, next) {
 
 
 }) */
+
 
 
 
