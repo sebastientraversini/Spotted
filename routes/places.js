@@ -207,6 +207,55 @@ router.get("/:id/score", getPlaceId, function (req, res, next) {
 
 });
 
+//ajouter un tag à une place s'il n'existe pas déjà
+
+router.post("/:id/tags", authenticate, getPlaceId, function (req, res, next) {
+
+  let newTag = req.body.tag;
+  console.log(newTag)
+
+
+  let alreadyInArray = false;
+  let arrayExistingTags = req.place.tags
+  let newArrayTags = [];
+  arrayExistingTags.forEach((el) => {
+    newArrayTags.push(el);
+    if (el === req.body.tag) {
+      alreadyInArray = true;
+    }
+  })
+
+  if (!alreadyInArray) {
+    //push le tag dans le nouveau tableau de tags
+    newArrayTags.push(req.body.tag)
+/*     res.send(newArrayTags) */
+    //patch le tableau de tags 
+
+    Place.findById(req.place._id, function (err, docs) {
+      if (err) {
+        console.log(err);
+      }
+      else {
+        Place.findOneAndUpdate(
+          { _id: req.place._id },
+          { tags : newArrayTags },
+          function (err, user) {
+            if (err) {
+              next(err);
+              return;
+            }
+            console.log(user)
+            res.send("Congrats, your tag has been added to this place !")
+          })
+      }
+    });
+
+
+  } else res.send("This tag exists already for this place. Please enter a new one !");
+});
+
+
+
 //poster une nouvelle photo pour une place existante
 router.post('/:id/pictures', getPlaceId, authenticate, upload.single('picture'), function (req, res, next) {
   /*     const bufferImage = Buffer.from(req.file); */
