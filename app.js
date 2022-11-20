@@ -2,17 +2,19 @@ import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
 import mongoose from 'mongoose';
+import config from "./config.js";
 
 
 /* mongoose.connect('mongodb://localhost/spotted'); */
 /* mongoose.connect('mongodb://localhost/express-api'); */
 
-const server ='127.0.0.1'
+/* const server ='127.0.0.1'
 const database = 'spotted';
+ */
+mongoose.connect(config.db.connection);
 
 
-
-const connectDB = async () => {
+/* const connectDB = async () => {
 
 try { await mongoose.connect(`mongodb://${server}/${database}`); 
 console.log("connected !");
@@ -21,7 +23,7 @@ console.log("connected !");
 }
 
 await connectDB();
-
+ */
 
 mongoose.Promise = Promise;
 
