@@ -29,62 +29,79 @@ let limit = 20;
 //obtenir les places avec une limite
 router.get("/", async function (req, res, next) {
   let limit = req.query.limit;
+
+  /*   if(req.query.tag && req.query.canton){
+     return res.send([req.query.tag, req.query.canton])
+    }
+   */
+  //filtre des places par tag
+  if (req.query.tag) {
+    let arrayPlacesWithThisTag = [];
+    let tagSearched = textFormatToCompare(req.query.tag);
+    let allPlaces = await Place.find({}).limit(limit).exec()
+    allPlaces.forEach((el) => {
+      //je suis dans chaque place
+      let tagInThisPlace = false;
+      el.tags.forEach((t) => {
+        //je suis dans chaque tag
+        if (textFormatToCompare(t) === tagSearched) {
+          tagInThisPlace = true;
+        }
+        /*         console.log(t) */
+      })
+      //si tag est présent dans cette place, on ajoute la place dans tableau des places contenant ce tag
+      if (tagInThisPlace) {
+        arrayPlacesWithThisTag.push(el);
+      }
+
+    })
+
+    if (arrayPlacesWithThisTag.length == 0) {
+      return res.send("no place contains this tag")
+    }
+
+    //si canton est aussi en query --> les filtres
+
+    if (req.query.canton) {
+      let arrayPlacesWithTagAndCanton = [];
+      arrayPlacesWithThisTag.forEach((el) => {
+        if (textFormatToCompare(req.query.canton) === textFormatToCompare(el.canton)) {
+          arrayPlacesWithTagAndCanton.push(el);
+        }
+        console.log(el)
+      })
+      if (arrayPlacesWithTagAndCanton.length == 0) {
+        return res.send("no place contains this tag in this canton")
+      }
+      return res.send(arrayPlacesWithTagAndCanton)
+
+    }
+
+    return res.send(arrayPlacesWithThisTag)
+
+  }
+
+  //filtre par canton
+  if (req.query.canton) {
+    let canton = req.query.canton;
+    console.log(canton);
+    const places = await Place.find({ canton: canton }).exec();
+    if (places.length == 0) {
+      return res.send("no places in this canton")
+    }
+    return res.send(places)
+  }
+
+
+  //si aucun filtre, on renvoie toutes les places (peut limiter avec limit)
   const places = await Place.find({}).limit(limit).exec()
   res.send(places)
 
-  
-
-})
-
-
-
-//get places filtered by cantons
-router.get("/filter", async function (req, res, next) {
-  console.log("ca marche");
-  let canton = req.query.canton;
-  console.log(canton);
-  const places = await Place.find({ canton: canton }).exec();
-  res.send(places)
-
-})
-
-
-//obtenir les places qui contiennent ce tag
-router.get("/tag", async function (req, res, next) {
-
   let arrayPlacesWithThisTag = [];
-  console.log(req.body.tag)
-  let tagSearched = textFormatToCompare(req.body.tag);
+  console.log(req.query.tag)
 
-  let allPlaces = await Place.find({}).limit(limit).exec()
-  allPlaces.forEach((el) => {
-    //je suis dans chaque place
-    let tagInThisPlace = false;
-    el.tags.forEach((t) => {
-      //je suis dans chaque tag
-      if (textFormatToCompare(t) === tagSearched) {
-        tagInThisPlace = true;
-      }
-      console.log(t)
-    })
-    //si tag est présent dans cette place, on ajoute la place dans tableau des places contenant ce tag
-    if (tagInThisPlace) {
-      arrayPlacesWithThisTag.push(el);
-    }
-    /*     console.log(el.tags) */
-  })
-
-
-  /*   let [tags] = req.query.tags;
-    
-    const places = await Place.find({ tags: [tags]}).exec() */
-    if(arrayPlacesWithThisTag.length == 0) {
-      return res.send("no place contains this tag")
-    }
-  res.send(arrayPlacesWithThisTag)
 
 })
-
 
 
 
@@ -114,8 +131,6 @@ router.get("/tag", async function (req, res, next) {
 
 
 }) */
-
-
 
 
 //chercher by id
