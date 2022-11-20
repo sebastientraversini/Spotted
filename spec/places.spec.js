@@ -3,6 +3,7 @@ import app from "../app.js";
 import mongoose from "mongoose";
 import Place from "../models/place.js";
 import { cleanUpDatabase, generateValidJwt } from "./utils.js";
+import User from "../models/user.js"
 
 afterAll(async () => {
   await mongoose.disconnect();
@@ -11,9 +12,24 @@ afterAll(async () => {
 beforeEach(cleanUpDatabase);
 
 describe("POST /places/", function () {
+
+  let johnDoe;
+    let janeDoe;
+
+    beforeEach(async function() {
+      // Create 2 users before retrieving the list.
+      [ johnDoe, janeDoe ] = await Promise.all([
+        User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' }),
+        User.create({ name: 'Jane Doe', surname: 'test', passwordHash:'test' })
+      ]);
+    });
+
   test("should add a place", async function () {
+    const token = await generateValidJwt(johnDoe);
+ 
     const res = await supertest(app)
       .post("/places")
+      .set('Authorization', `Bearer ${token}`)
       .send({
         name: "Test",
         canton: "VD",
@@ -32,42 +48,57 @@ describe("POST /places/", function () {
   });
 });
 
-describe("DELETE /places", function () {
+describe("DELETE /places",function () {
+
+  let johnDoe;
+  let janeDoe;
+  let place;
+
   beforeEach(async function () {
 
-    let place;
-     place = await Promise.all([
-      Place.create({
-        name: "Test",
-        canton: "VD",
-        location: {
-          type: "Point",
-          coordinates: [120.0, 0.5],
-        },
-        tags: "JARDIN",
-      }),
+    
+
+    [ johnDoe, janeDoe ] = await Promise.all([
+      User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' }),
+      User.create({ name: 'Jane Doe', surname: 'test', passwordHash:'test' })
     ]);
 
-    let johnDoe = await Promise.all([
-    User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' })
-    ]);
+
+    
+    place = await Promise.all([
+     Place.create({
+       name: "Test",
+       canton: "VD",
+       location: {
+         type: "Point",
+         coordinates: [120.0, 0.5],
+       },
+       tags: "JARDIN",
+     }),
+   ]);
+
   });
+    
 
-  test("should delete place", async function () {
-    const count = await Place.estimatedDocumentCount();
-    // console.log(count)
-    const token = await generateValidJwt(johnDoe);
-    const res = await supertest(app)
-      .delete('/places/${place.id}')
-      .set('Authorization', `Bearer ${token}`)
-      .expect(204)
+    test("should delete place", async function () {
+      const count = await Place.estimatedDocumentCount();
+      // console.log(count)
+      const token = await generateValidJwt(johnDoe);
+      const res = await supertest(app)
+        .delete(`/places/${place.id}`)
+        .set('Authorization', `Bearer ${token}`)
+        .expect(204)
+  
+        //check if the place is deleted in the database
+        const place2 = await Place.findById(Place.body._id);
+        expect(place2).toBeNull();
+  
+    
+  });
+})
+ 
 
-      //check if the place is deleted in the database
-      const place2 = await Place.findById(Place.body._id);
-      expect(place2).toBeNull();
 
-
-    });
       /* .then(async (res) => {
         const newCount = await Place.estimatedDocumentCount();
         //    console.log(newCount)
@@ -75,4 +106,3 @@ describe("DELETE /places", function () {
       });
        expect(res).toEqual(count-1); */
   
-});

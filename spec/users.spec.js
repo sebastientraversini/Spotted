@@ -73,8 +73,8 @@ describe('DELETE /users/:name', function (){
   beforeEach(async function() {
     // Create 2 users before retrieving the list.
     [ johnDoe, janeDoe ] = await Promise.all([
-      User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' }),
-      User.create({ name: 'JaneDoe', surname: 'test', passwordHash:'test' })
+      User.create({ name:'John Doe',surname:'test', passwordHash:'test' }),
+      User.create({ name:'Jane Doe', surname:'test', passwordHash:'test' })
     ]);
   });
 
@@ -82,7 +82,7 @@ describe('DELETE /users/:name', function (){
   test("should delete a user by his name", async function () {
     const token = await generateValidJwt(janeDoe);
     const res = await supertest(app)
-    .delete('/users/${janeDoe.name}')
+    .delete(`/users/${janeDoe.id}`)
     .set('Authorization', `Bearer ${token}`)
     .expect(200)
   });
