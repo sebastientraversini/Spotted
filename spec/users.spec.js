@@ -16,25 +16,19 @@ describe("POST /users", function () {
     const res = await supertest(app)
       .post("/users")
       .send({
-        name: "John Doe",
+        name: "JohnDoe",
         surname: "John",
-        password: "1234",
+        password: "Test",
       })
       .expect(200)
       .expect("Content-Type", /json/);
 
-    expect(res.body).toEqual(
-      expect.objectContaining({
-        _id: expect.any(String),
-        name: "John Doe",
-        surname: "John",
-      })
-    );
+      expect(res.body).toBeObject();
+      expect(res.body._id).toBeString();
+      expect(res.body.name).toEqual("Johndoe");
+      expect(res.body).toContainAllKeys(["name","surname", "pictures", "notes", "_id", "__v"]);
 
-    expect(res.body).toBeObject();
-    expect(res.body._id).toBeString();
-    expect(res.body.name).toEqual("John Doe");
-    expect(res.body).toContainAllKeys(["name","surname", "pictures", "notes", "_id", "__v"]);
+    
   });
 });
 
@@ -46,8 +40,8 @@ describe("GET /users", function () {
     beforeEach(async function() {
       // Create 2 users before retrieving the list.
       [ johnDoe, janeDoe ] = await Promise.all([
-        User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' }),
-        User.create({ name: 'Jane Doe', surname: 'test', passwordHash:'test' })
+        User.create({ name: 'JohnDoe',surname: 'test', passwordHash:'test' }),
+        User.create({ name: 'JaneDoe', surname: 'test', passwordHash:'test' })
       ]);
     });
 
@@ -73,8 +67,8 @@ describe('DELETE /users/:name', function (){
   beforeEach(async function() {
     // Create 2 users before retrieving the list.
     [ johnDoe, janeDoe ] = await Promise.all([
-      User.create({ name:'John Doe',surname:'test', passwordHash:'test' }),
-      User.create({ name:'Jane Doe', surname:'test', passwordHash:'test' })
+      User.create({ name:'Johndoe',surname:'test', passwordHash:'test' }),
+      User.create({ name:'Janedoe', surname:'test', passwordHash:'test' })
     ]);
   });
 
@@ -97,8 +91,8 @@ describe('PATCH /users/:name', function (){
   beforeEach(async function() {
     // Create 2 users before retrieving the list.
     [ johnDoe, janeDoe ] = await Promise.all([
-      User.create({ name:'John Doe',surname:'test', passwordHash:'test' }),
-      User.create({ name:'Jane Doe', surname:'test', passwordHash:'test' })
+      User.create({ name:'JohnDoe',surname:'test', passwordHash:'test' }),
+      User.create({ name:'JaneDoe', surname:'test', passwordHash:'test' })
     ]);
   });
 
@@ -109,7 +103,7 @@ describe('PATCH /users/:name', function (){
       .set('Authorization', `Bearer ${token}`)
       .send({
         name: "Test",
-        surname: "Test1234"
+        surname: "Testing"
       })
       .expect(200)
       .expect('Content-Type', /text/)

@@ -19,8 +19,8 @@ describe("POST /places/", function () {
     beforeEach(async function() {
       // Create 2 users before retrieving the list.
       [ johnDoe, janeDoe ] = await Promise.all([
-        User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' }),
-        User.create({ name: 'Jane Doe', surname: 'test', passwordHash:'test' })
+        User.create({ name: 'JohnDoe',surname: 'test', passwordHash:'test' }),
+        User.create({ name: 'JaneDoe', surname: 'test', passwordHash:'test' })
       ]);
     });
 
@@ -32,7 +32,7 @@ describe("POST /places/", function () {
       .set('Authorization', `Bearer ${token}`)
       .send({
         name: "Test",
-        canton: "VD",
+        canton: "Vaud",
         location: {
           type: "Point",
           coordinates: [120.0, 0.5],
@@ -43,7 +43,7 @@ describe("POST /places/", function () {
       .expect("Content-Type", /json/);
 
     expect(res.body.name).toEqual("Test");
-    expect(res.body.canton).toEqual("VD");
+    expect(res.body.canton).toEqual("Vaud");
     expect(res.body.tags).toEqual(["JARDIN"]);
   });
 });
@@ -59,8 +59,8 @@ describe("DELETE /places",function () {
     
 
     [ johnDoe, janeDoe ] = await Promise.all([
-      User.create({ name: 'John Doe',surname: 'test', passwordHash:'test' }),
-      User.create({ name: 'Jane Doe', surname: 'test', passwordHash:'test' })
+      User.create({ name: 'JohnDoe',surname: 'test', passwordHash:'test' }),
+      User.create({ name: 'JaneDoe', surname: 'test', passwordHash:'test' })
     ]);
 
 
@@ -69,7 +69,7 @@ describe("DELETE /places",function () {
      Place.create({
        name: "Test",
        creator: johnDoe.id,
-       canton: "VD",
+       canton: "Vaud",
        location: {
          type: "Point",
          coordinates: [120.0, 0.5],
