@@ -28,7 +28,7 @@ router.post('/', async (req, res, next) => {
                 if (err) {
                     next(err)
                 } else {
-                    res.send({ "token" : token,
+                    res.send({ "token" : token, user,
                     "message" : `Bien joué t'es online, ${user.name}!` 
                  })
                 }
