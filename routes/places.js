@@ -377,5 +377,90 @@ export default router;
 
 
 
+/**
+ * @api {get} /places/:id Request a place's information
+ *  
+ * @apiName Get a Place
+ * @apiGroup Place
+ *
+ * @apiParam {Number} id Place id 
+ * @apiParam {String} name Place name 
+ *
+ * @apiSuccess {String} name Place name
+ * @apiSuccess {String} canton  Place canton
+ * @apiSuccess {Objects[]} location  Place location
+ * @apiSuccess {Strings[]} pictures Place pictures
+ * @apiSuccess {Strings[]} notes Place notes
+ * @apiSuccess {String[]} tags Place tags
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "name": "chateau de Chillon",
+ *       "canton": "Vaud",
+ *        "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }",
+ * "pictures": "{
+ *        1,
+ *        2,
+ *        3
+ *          }",
+ * "notes": "{
+ *        stars : 3,
+ *        text: tréjoli,
+ *          }",
+ * "tags": "{chateau,
+ *           Lac}"
+ *     }
+ */
 
-
+/**
+ * @api {post} /places/ add a Place
+ *   @apiPermission seulement les users connectés
+ * @apiName Add a Place
+ * @apiGroup Place
+ * 
+ * @apiParam {String} name Place name
+ * @apiParam {String} canton User canton
+ * @apiParam {String} location Place location
+ * @apiParam {Objects[]} [pictures]  User pictures
+ * @apiParam {Strings[]} [notes]  User notes
+ * @apiParam {Strings[]} [tags] User tags
+ * 
+ * 
+ * @apiParamExample Example Body:
+ *    {
+ *     "name": "Chateau de Chillon",
+ *    "canton": "Vaud",
+ *   "location": "{
+ *        1324324234.23,
+ *        234234234234.76556
+ *        }",
+ * "pictures": "{
+ *       1,
+ *      2,
+ *    3
+ *   } ,
+ * "notes": "{
+ *       stars : 3,
+ *      text: tréjoli
+ *  }",
+ * "tags": "{chateau,
+ *         Lac}"
+ * }
+ * 
+ * 
+ * 
+ * @apiSuccess {String} name Place name
+ * @apiSuccess {String} canton User canton
+ * @apiSuccess {String} location Place location
+ * 
+ * @apiSuccessExample Success-Response:
+ *     HTTP/1.1 200 OK
+ *     {
+ *       "votre place à été créé !"
+ *       
+ *     }
+ */

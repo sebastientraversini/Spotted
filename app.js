@@ -1,6 +1,34 @@
 import express from "express";
 import createError from "http-errors";
 import logger from "morgan";
+import mongoose from 'mongoose';
+import config from "./config.js";
+
+
+/* mongoose.connect('mongodb://localhost/spotted'); */
+/* mongoose.connect('mongodb://https://spotted-rest-api.onrender.com/express-api'); */
+
+/* const server ='127.0.0.1'
+const database = 'spotted';
+ */
+
+mongoose.connect(config.db.connection);
+
+
+/* const connectDB = async () => {
+
+try { await mongoose.connect(`mongodb://${server}/${database}`); 
+console.log("connected !");
+} 
+  catch (err) { console.log('Failed to connect',err)}
+}
+
+await connectDB();
+ */
+
+mongoose.Promise = Promise;
+
+
 import indexRouter from "./routes/index.js";
 import usersRouter from "./routes/users.js";
 import placesRouter from "./routes/places.js";
@@ -8,13 +36,7 @@ import notesRouter from "./routes/notes.js";
 import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
 
-
-import mongoose from 'mongoose';
-mongoose.Promise = Promise;
-mongoose.connect('mongodb://localhost/express-api');
-
 const app = express();
-
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }

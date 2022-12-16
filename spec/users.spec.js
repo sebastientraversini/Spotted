@@ -16,23 +16,19 @@ describe("POST /users", function () {
     const res = await supertest(app)
       .post("/users")
       .send({
-        name: "John Doe",
-        password: "1234",
+        name: "JohnDoe",
+        surname: "John",
+        password: "Test",
       })
       .expect(200)
       .expect("Content-Type", /json/);
 
-    expect(res.body).toEqual(
-      expect.objectContaining({
-        _id: expect.any(String),
-        name: "John Doe",
-      })
-    );
+      expect(res.body).toBeObject();
+      expect(res.body._id).toBeString();
+      expect(res.body.name).toEqual("Johndoe");
+      expect(res.body).toContainAllKeys(["name","surname", "pictures", "notes", "_id", "__v"]);
 
-    expect(res.body).toBeObject();
-    expect(res.body._id).toBeString();
-    expect(res.body.name).toEqual("John Doe");
-    expect(res.body).toContainAllKeys(["name", "pictures", "notes", "_id", "__v"]);
+    
   });
 });
 
@@ -44,8 +40,8 @@ describe("GET /users", function () {
     beforeEach(async function() {
       // Create 2 users before retrieving the list.
       [ johnDoe, janeDoe ] = await Promise.all([
-        User.create({ name: 'John Doe',passwordHash:'test' }),
-        User.create({ name: 'Jane Doe', passwordHash:'test' })
+        User.create({ name: 'JohnDoe',surname: 'test', passwordHash:'test' }),
+        User.create({ name: 'JaneDoe', surname: 'test', passwordHash:'test' })
       ]);
     });
 
@@ -62,3 +58,55 @@ describe("GET /users", function () {
     expect(res.body).toHaveLength(2);
   });
 });
+
+describe('DELETE /users/:name', function (){
+
+  let johnDoe;
+  let janeDoe;
+
+  beforeEach(async function() {
+    // Create 2 users before retrieving the list.
+    [ johnDoe, janeDoe ] = await Promise.all([
+      User.create({ name:'Johndoe',surname:'test', passwordHash:'test' }),
+      User.create({ name:'Janedoe', surname:'test', passwordHash:'test' })
+    ]);
+  });
+
+
+  test("should delete a user by his name", async function () {
+    const token = await generateValidJwt(janeDoe);
+    const res = await supertest(app)
+    .delete(`/users/${janeDoe.id}`)
+    .set('Authorization', `Bearer ${token}`)
+    .expect(200)
+  });
+
+})
+
+describe('PATCH /users/:name', function (){
+
+  let johnDoe;
+  let janeDoe;
+
+  beforeEach(async function() {
+    // Create 2 users before retrieving the list.
+    [ johnDoe, janeDoe ] = await Promise.all([
+      User.create({ name:'JohnDoe',surname:'test', passwordHash:'test' }),
+      User.create({ name:'JaneDoe', surname:'test', passwordHash:'test' })
+    ]);
+  });
+
+  test("should modify the user's name and surname", async function() {
+    const token = await generateValidJwt(johnDoe);
+    const res = await supertest(app)
+      .patch(`/users/${johnDoe.id}`)
+      .set('Authorization', `Bearer ${token}`)
+      .send({
+        name: "Test",
+        surname: "Testing"
+      })
+      .expect(200)
+      .expect('Content-Type', /text/)
+});
+
+})
