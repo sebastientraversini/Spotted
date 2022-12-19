@@ -36,8 +36,7 @@ import notesRouter from "./routes/notes.js";
 import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
 
-const cors = require('cors');
-app.use(cors());
+
 
 const app = express();
 if (process.env.NODE_ENV !== 'test') {
