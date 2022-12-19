@@ -37,13 +37,12 @@ import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
 import cors from "cors";
 
-app.use(cors());
-
 const app = express();
 if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
 
+app.use(cors());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
