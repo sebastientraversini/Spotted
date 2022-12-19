@@ -35,8 +35,9 @@ import placesRouter from "./routes/places.js";
 import notesRouter from "./routes/notes.js";
 import picturesRouter from "./routes/pictures.js";
 import authRouter from "./routes/auth.js";
+import cors from "cors";
 
-
+app.use(cors());
 
 const app = express();
 if (process.env.NODE_ENV !== 'test') {
