@@ -70,7 +70,7 @@ router.get("/", async function (req, res, next) {
     console.log(canton);
     const places = await Place.find({ canton: canton }).exec();
     if (places.length == 0) {
-      return [];
+      res.send([]);
     }
     return res.send(places)
   }
