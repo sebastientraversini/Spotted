@@ -42,7 +42,7 @@ router.get("/", async function (req, res, next) {
     })
 
     if (arrayPlacesWithThisTag.length == 0) {
-      return res.send("no place contains this tag")
+      return       res.send([]);
     }
 
     //si canton est aussi en query --> on mix les filtres
@@ -55,7 +55,7 @@ router.get("/", async function (req, res, next) {
         console.log(el)
       })
       if (arrayPlacesWithTagAndCanton.length == 0) {
-        return res.send("no place contains this tag in this canton")
+        return       res.send([]);
       }
       return res.send(arrayPlacesWithTagAndCanton)
 
