@@ -24,8 +24,8 @@ const placeSchema = new Schema({
     type: String,
     required: true,
     validate: {
-      validator: validateWord,
-      message: '{VALUE} is not a valid word. Use minimal 3 letters and use only letters'
+      validator: validateCanton,
+      message: '{VALUE} is not a valid word. Use minimal 3 letters and use only letters, accent or tiret'
     }
   },
   location: {
@@ -69,6 +69,12 @@ function isLongitude(value) {
 
 function validateWord(value) {
   let isOk = /^[a-zA-Z]{3,}$/.test(value);
+  return isOk;
+}
+
+function validateCanton(value) {
+/*   let isOk = /^[a-zA-Z]{3,}$/.test(value); */
+  let isOk = /^[a-zA-Z0-9_\-\. ]{3,}+$/.test(value);
   return isOk;
 }
 
