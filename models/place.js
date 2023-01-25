@@ -13,7 +13,7 @@ const placeSchema = new Schema({
     type: String,
     required: true,
     validate: {
-      validator: validateWord,
+      validator: validateNomPlace,
       message: '{VALUE} is not a valid word. Use minimal 3 letters and use only letters'
     }
   },
@@ -69,6 +69,11 @@ function isLongitude(value) {
 
 function validateWord(value) {
   let isOk = /^[a-zA-Z]{3,}$/.test(value);
+  return isOk;
+}
+
+function validateNomPlace(value) {
+  let isOk = /^[a-zA-ZáàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ._\s-]{3,40}$/.test(value);
   return isOk;
 }
 
