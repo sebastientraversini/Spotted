@@ -42,7 +42,7 @@ if (process.env.NODE_ENV !== 'test') {
   app.use(logger('dev'));
 }
 
-app.use(express.json({ limit: 4194304 }));
+app.use(express.json({ limit: 7340032 }));
 
 app.use(cors());
 
