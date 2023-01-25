@@ -16,9 +16,8 @@ router.get("/", function (req, res, next) {
         if (err) {
           return next(err);
         }
-        const base64Image = pictures.toString('base64');
-  res.send(base64Image);
-        
+        const base64Image = Picture.toString('base64');
+        res.send(base64Image);       
       }); 
 });
 
