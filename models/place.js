@@ -74,7 +74,7 @@ function validateWord(value) {
 
 function validateCanton(value) {
 /*   let isOk = /^[a-zA-Z]{3,}$/.test(value); */
-  let isOk = /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ._\s-]{3,30}$/.test(value);
+  let isOk = /^[a-zA-Z0-9áàâäãåçéèêëíìîïñóòôöõúùûüýÿæœÁÀÂÄÃÅÇÉÈÊËÍÌÎÏÑÓÒÔÖÕÚÙÛÜÝŸÆŒ._\s-]{3,40}$/.test(value);
   return isOk;
 }
 
