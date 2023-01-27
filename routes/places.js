@@ -267,7 +267,7 @@ router.get("/:id/score", getPlaceId, function (req, res, next) {
     let globaleScore = {
       "score":
         sum / count,
-      "number review": count
+      "nbReview": count
     }
     console.log(globaleScore)
 
