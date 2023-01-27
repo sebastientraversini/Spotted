@@ -43,7 +43,7 @@ if (process.env.NODE_ENV !== 'test') {
 }
 
 app.use(express.json({ limit: 7340032 }));
-
+var cors = require('cors'); 
 app.use(cors());
 
 app.use(express.json());
