@@ -194,12 +194,12 @@ router.delete('/:id', getPlaceId, authenticate, function (req, res, next) {
         return res.status('403').send("You can only delete places you created")
       }
 
-      Place.findOneAndDelete({ _id: req.place._id }, function (err, user) {
+      Place.findOneAndDelete({ _id: req.place._id }, function (err, place) {
         if (err) {
           next(err);
           return;
         }
-        res.send("tu as supprimé la place, bravo !")
+        res.send(place)
       })
     }
   });
