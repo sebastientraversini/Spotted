@@ -266,7 +266,7 @@ router.delete('/:id/notes/:noteId', getPlaceId, authenticate, function (req, res
           next(err);
           return;
         }
-        res.send("tu as supprimé ta note, bravo !")
+        res.send({"note" : "tu as supprimé ta note, bravo !", "personneCo" : result, "user" : req.userId})
       })
     }
 
