@@ -172,7 +172,7 @@ router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
             next(err);
             return;
           }
-          console.log(user)
+          console.log(place)
           res.send(place)
         })
     }
