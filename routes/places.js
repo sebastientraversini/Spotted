@@ -167,13 +167,13 @@ router.patch('/:id', getPlaceId, authenticate, function (req, res, next) {
       Place.findOneAndUpdate(
         { _id: req.place._id },
         { name: textFormat(req.body.name), canton: textFormat(req.body.canton) },
-        function (err, user) {
+        function (err, place) {
           if (err) {
             next(err);
             return;
           }
           console.log(user)
-          res.send("tu as modifié la place, bravo !")
+          res.send(place)
         })
     }
   });
