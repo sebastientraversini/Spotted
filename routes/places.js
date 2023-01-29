@@ -245,6 +245,32 @@ router.get("/:id/notes", getPlaceId, function (req, res, next) {
 
 });
 
+//supprimer une note pour une place
+router.delete('/:id/notes/:noteId', getPlaceId, authenticate, function (req, res, next) {
+
+  Note.find({_id: req.params.noteId}).where('place').equals(req.place._id).exec(function (err, result) {
+    if (!result || err) {
+      // console.log(req.user)
+      res.send("pas de note, pas possible de supprimer ta note");
+      return;
+    } else
+    {
+      if (!result.author.equals(req.userId)) {
+        return res.status('403').send("You can only delete notes you created")
+      }
+    }
+    Note.findOneAndDelete({ _id: req.params.noteId }, function (err, user) {
+      if (err) {
+        next(err);
+        return;
+      }
+      res.send("tu as supprimé ta note, bravo !")
+    })
+
+  });
+
+})
+
 
 
 
