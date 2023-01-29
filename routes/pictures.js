@@ -5,8 +5,13 @@ import { authenticate } from "./auth.js";
 import Picture from '../models/picture.js';
 //multer pour envoyer form multi-data
 import multer from "multer";
-const upload = multer();
-/* optionnal --> const upload = multer({ dest: 'uploads/' }) --> otherwise saved on memory */
+/* const upload = multer(); */
+
+ var upload = multer({
+    dest: 'uploads/',
+    storage: multer.memoryStorage()
+});
+
 import User from "../models/user.js"
 
 
