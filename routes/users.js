@@ -12,7 +12,7 @@ import { textFormatToCompare } from "../spec/utils.js";
 
 const router = express.Router();
 
-router.get("/", authenticate, function (req, res, next) {
+router.get("/", function (req, res, next) {
   User.find().sort('name').exec(function (err, users) {
     if (err) {
       return next(err);
