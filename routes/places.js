@@ -261,12 +261,12 @@ router.delete('/:id/notes/:noteId', getPlaceId, authenticate, function (req, res
         
       } */
 
-      Note.findOneAndDelete({ _id: req.params.noteId }, function (err, user) {
+      Note.findOneAndDelete({ _id: req.params.noteId }, function (err, note) {
         if (err) {
           next(err);
           return;
         }
-        res.send(result)
+        res.send(note)
       })
     }
 
